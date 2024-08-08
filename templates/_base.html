@@ -1,0 +1,13 @@
+<!DOCTYPE html>
+<html>
+    <head>
+        <title>{% block title %}Bookstore{% endblock title %}</title>
+    </head>
+    <body>
+        <header>
+            <h2><a href="{% url 'home' %}">Home</a></h2>
+        </header>
+        {% block content %}
+        {% endblock content %}
+    </body>
+</html>
