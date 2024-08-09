@@ -29,3 +29,5 @@ class HomePageTests(TestCase):
     def test_home_page_url_resolves_homepageview(self):
         view = resolve('/')
         self.assertEqual(view.func.__name__, HomePageView.as_view().__name__)
+    
+    
