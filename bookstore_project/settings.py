@@ -45,6 +45,7 @@ INSTALLED_APPS = [
     'crispy_bootstrap4',
     'allauth',
     'allauth.account',
+    'anymail',
 
     # Local
     'users.apps.UsersConfig',
@@ -158,7 +159,6 @@ AUTHENTICATION_BACKENDS = (
     'allauth.account.auth_backends.AuthenticationBackend',
 )
 
-EMAIL_BACKEND = 'django.core.mail.backends.console.EmailBackend'
 ACCOUNT_SESSION_REMEMBER = True # set to None to have the 'Remember Me' box
 ACCOUNT_SIGNUP_PASSWORD_ENTER_TWICE = True
 ACCOUNT_EMAIL_REQUIRED = True # user has to enter email when signing up
@@ -169,3 +169,19 @@ ACCOUNT_AUTHENTICATION_METHOD = "email"
 # crispy-forms config
 CRISPY_ALLOWED_TEMPLATE_PACKS = "bootstrap4"
 CRISPY_TEMPLATE_PACK = 'bootstrap4'
+
+# E-mail config
+ANYMAIL = {
+    # (exact settings here depend on your ESP...)
+    "MAILERSEND_API_TOKEN": "mlsn.33b6565b982ccce892500cfcdf270f5a74e5986f166ddddf66d6519e1e584df7",
+    "MAILERSEND_SENDER_DOMAIN": 'trial-pr9084zzerm4w63d.mlsender.net',  # your MailerSend domain, if needed
+}
+EMAIL_BACKEND = "anymail.backends.mailersend.EmailBackend"
+DEFAULT_FROM_EMAIL = "admin@trial-pr9084zzerm4w63d.mlsender.net"  # if you don't already have this in settings
+SERVER_EMAIL = "your-server@example.com"  # ditto (default from-email for Django errors)
+
+"""EMAIL_HOST = 'smtp.mailersend.net'
+EMAIL_HOST_USER = 'MS_zC5z0B@trial-pr9084zzerm4w63d.mlsender.net'
+EMAIL_HOST_PASSWORD = 'UE1R8TJ4OxIVsgqJ'
+EMAIL_PORT = 587
+EMAIL_USE_TLS = True"""
