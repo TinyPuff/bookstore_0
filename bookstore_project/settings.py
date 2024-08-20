@@ -50,6 +50,7 @@ INSTALLED_APPS = [
     # Local
     'users.apps.UsersConfig',
     'pages.apps.PagesConfig',
+    'books.apps.BooksConfig',
 ]
 
 MIDDLEWARE = [
@@ -179,9 +180,3 @@ ANYMAIL = {
 EMAIL_BACKEND = "anymail.backends.mailersend.EmailBackend"
 DEFAULT_FROM_EMAIL = "admin@trial-pr9084zzerm4w63d.mlsender.net"  # if you don't already have this in settings
 SERVER_EMAIL = "your-server@example.com"  # ditto (default from-email for Django errors)
-
-"""EMAIL_HOST = 'smtp.mailersend.net'
-EMAIL_HOST_USER = 'MS_zC5z0B@trial-pr9084zzerm4w63d.mlsender.net'
-EMAIL_HOST_PASSWORD = 'UE1R8TJ4OxIVsgqJ'
-EMAIL_PORT = 587
-EMAIL_USE_TLS = True"""
