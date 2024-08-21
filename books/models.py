@@ -13,7 +13,7 @@ class Book(models.Model):
         editable=False,
         unique=True,
     )
-    # cover = models.ImageField(upload_to="uploads/")
+    cover = models.ImageField(upload_to="covers/", blank=True)
     title = models.CharField(max_length=350)
     author = models.CharField(max_length=250)
     price = models.DecimalField(max_digits=6, decimal_places=2)

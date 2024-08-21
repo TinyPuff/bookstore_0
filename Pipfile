@@ -10,6 +10,7 @@ django-crispy-forms = "==2.3"
 crispy-bootstrap4 = "==2024.1"
 django-allauth = "==64.1.0"
 django-anymail = {extras = ["mailersend"], version = "==11.1"}
+pillow = "==10.4.0"
 
 [dev-packages]
 

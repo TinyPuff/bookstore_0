@@ -7,7 +7,7 @@
     <div class="container">
         {% for book in books %}
             <div class="container">
-                <h4><a href="{% url 'book_details' book.pk %}">{{ book.author }} - {{ book.title }} | ${{ book.price }}</a></h4>
+                <h4><a href="{{ book.get_absolute_url }}">{{ book.author }} - {{ book.title }} | ${{ book.price }}</a></h4>
             </div>
         {% endfor %}
     </div>
