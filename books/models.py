@@ -19,6 +19,11 @@ class Book(models.Model):
     price = models.DecimalField(max_digits=6, decimal_places=2)
     details = models.TextField(max_length=1000, default="")
 
+    class Meta:
+        permissions = [
+            ('special_status', 'Can read all books')
+        ]
+
     def __str__(self):
         return (f"{self.author} - {self.title}")
     
