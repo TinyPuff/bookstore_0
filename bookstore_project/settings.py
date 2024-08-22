@@ -46,11 +46,13 @@ INSTALLED_APPS = [
     'allauth',
     'allauth.account',
     'anymail',
+    'azbankgateways',
 
     # Local
     'users.apps.UsersConfig',
     'pages.apps.PagesConfig',
     'books.apps.BooksConfig',
+    'orders.apps.OrdersConfig',
 ]
 
 MIDDLEWARE = [
@@ -185,3 +187,25 @@ ANYMAIL = {
 EMAIL_BACKEND = "anymail.backends.mailersend.EmailBackend"
 DEFAULT_FROM_EMAIL = "admin@trial-pr9084zzerm4w63d.mlsender.net"  # if you don't already have this in settings
 SERVER_EMAIL = "your-server@example.com"  # ditto (default from-email for Django errors)
+
+# azbankgateways config
+MERCHANT_CODE = os.environ.get('MERCHANT_SECRET_KEY')
+AZ_IRANIAN_BANK_GATEWAYS = {
+    "GATEWAYS": {
+        "ZIBAL": {
+            "MERCHANT_CODE": MERCHANT_CODE,
+        },
+    },
+    "IS_SAMPLE_FORM_ENABLE": True,  # اختیاری و پیش فرض غیر فعال است
+    "DEFAULT": "ZIBAL",
+    "CURRENCY": "IRR",  # اختیاری
+    "TRACKING_CODE_QUERY_PARAM": "tc",  # اختیاری
+    "TRACKING_CODE_LENGTH": 16,  # اختیاری
+    "SETTING_VALUE_READER_CLASS": "azbankgateways.readers.DefaultReader",  # اختیاری
+    "BANK_PRIORITIES": [
+        "ZIBAL",
+        # and so on ...
+    ],  # اختیاری
+    "IS_SAFE_GET_GATEWAY_PAYMENT": False,  # اختیاری، بهتر است True بزارید.
+    "CUSTOM_APP": None,  # اختیاری
+}

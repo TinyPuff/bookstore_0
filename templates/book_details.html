@@ -12,6 +12,10 @@
         {% endif %}
         <p>Price: ${{ book.price }}</p>
         <p>{{ book.details }}</p>
+        <form action="{% url 'gtgateway' %}" method="post">{% csrf_token %}
+            <input type="hidden" name="product_id" value="{{ book.pk }}" />
+            <button class="btn btn-success" type="submit">Purchase</button>
+        </form>
     </div>
     <div>
         <h3>Reviews:</h3>

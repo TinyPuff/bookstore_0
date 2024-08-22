@@ -16,7 +16,7 @@ class Book(models.Model):
     cover = models.ImageField(upload_to="covers/", blank=True)
     title = models.CharField(max_length=350)
     author = models.CharField(max_length=250)
-    price = models.DecimalField(max_digits=6, decimal_places=2)
+    price = models.DecimalField(max_digits=11, decimal_places=2)
     details = models.TextField(max_length=1000, default="")
 
     class Meta:
