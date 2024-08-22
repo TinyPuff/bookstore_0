@@ -1,11 +1,14 @@
+from typing import Any
 from django.contrib.auth.mixins import (
     LoginRequiredMixin,
     PermissionRequiredMixin,
 )
+from django.db.models.query import QuerySet
 from django.shortcuts import render, get_object_or_404
 from django.views.generic import TemplateView, ListView, DetailView
 from django.contrib.auth import get_user_model
 from books.models import Book
+from django.db.models import Q
 
 # Create your views here.
 
@@ -41,3 +44,14 @@ class BookDetailsPageView(LoginRequiredMixin, PermissionRequiredMixin, DetailVie
         request.session['selected_product_price'] = int(product.price)
 
         return response
+    
+class SearchResultsPageView(ListView):
+    model = Book
+    template_name = "search_results.html"
+    context_object_name = 'books'
+    
+    def get_queryset(self):
+        query=self.request.GET.get('q')
+        return Book.objects.filter(
+            Q(title__icontains=query) | Q(author__icontains=query)
+        )

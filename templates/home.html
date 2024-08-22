@@ -4,15 +4,18 @@
 
 {% block content %}
     <h1>Homepage</h1>
-    <img class="bookcover" src="{% static 'images/cover.jpg' %}">
-    {% if user.is_authenticated %}
-        <p>Welcome {{ user.username }}</p>
-        <form action="{% url 'account_logout' %}" method="post">{% csrf_token %}
-            <button class="btn btn-danger" type="submit">Logout</button>
-        </form>
-    {% else %}
-        <a href="{% url 'account_login' %}">Log In</a>
-        <a href="{% url 'account_signup' %}">Sign Up</a>
-    {% endif %}
-    <p>Hey</p>
+    <div class="container">
+        {% if user.is_authenticated %}
+            <p>Welcome {{ user.username }}</p>
+            <form class="form-inline mt-2 mt-md-0" action="{% url 'search_results' %}" method="get">
+                <input name="q" class="form-control mr-sm-2" type="text" placeholder="Search" aria-label="Search">
+                <button class="btn btn-success" type="submit">Submit</button>
+            </form>
+            <form action="{% url 'account_logout' %}" method="post">{% csrf_token %}
+                <button class="btn btn-danger" type="submit">Logout</button>
+            </form>
+        {% else %}
+            <p>You need to sign in to be able to view the content.</p>
+        {% endif %}
+    </div>
 {% endblock content %}
