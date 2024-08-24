@@ -12,11 +12,13 @@ https://docs.djangoproject.com/en/5.0/ref/settings/
 
 from pathlib import Path
 import os
+from dotenv import load_dotenv
 
 # Build paths inside the project like this: BASE_DIR / 'subdir'.
 BASE_DIR = Path(__file__).resolve().parent.parent
 
 # Environment
+load_dotenv()
 ENVIRONMENT = os.environ.get('ENVIRONMENT', default="development")
 
 # Quick-start development settings - unsuitable for production
@@ -252,6 +254,6 @@ if ENVIRONMENT=="production":
     SECURE_CONTENT_TYPE_NOSNIFF = True
 
 # Heroku
-import dj_database_url
-db_from_env = dj_database_url.config(conn_max_age=500)
-DATABASES['default'].update(db_from_env)
+# import dj_database_url
+# db_from_env = dj_database_url.config(conn_max_age=500)
+# DATABASES['default'].update(db_from_env)
