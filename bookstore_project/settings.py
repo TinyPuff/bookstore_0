@@ -64,6 +64,9 @@ MIDDLEWARE = [
     'django.contrib.messages.middleware.MessageMiddleware',
     'django.middleware.clickjacking.XFrameOptionsMiddleware',
     'allauth.account.middleware.AccountMiddleware',
+    # 'django.middleware.cache.UpdateCacheMiddleware',
+    # 'django.middleware.common.CommonMiddleware',
+    # 'django.middleware.cache.FetchFromCacheMiddleware',
 ]
 
 ROOT_URLCONF = 'bookstore_project.urls'
@@ -209,3 +212,15 @@ AZ_IRANIAN_BANK_GATEWAYS = {
     "IS_SAFE_GET_GATEWAY_PAYMENT": False,  # اختیاری، بهتر است True بزارید.
     "CUSTOM_APP": None,  # اختیاری
 }
+
+# Caching
+"""REDIS_HOST = os.environ.get('REDIS_HOST', '127.0.0.1')
+REDIST_PORT = os.environ.get('REDIS_PORT', '6379')
+CACHES = {
+    "default": {
+        "BACKEND": "django.core.cache.backends.redis.RedisCache",
+        "LOCATION": f"redis://{REDIS_HOST}:{REDIST_PORT}/1",
+    }
+}
+CACHE_MIDDLEWARE_SECONDS = 600
+CACHE_MIDDLEWARE_KEY_PREFIX = 'bookstore'"""
