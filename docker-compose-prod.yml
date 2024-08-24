@@ -12,7 +12,7 @@ services:
       - MERCHANT_SECRET_KEY=zibal
       - REDIS_HOST=redis
       - REDIS_PORT=6379
-      - DATABASE_URL=postgresql://postgres.diibynrdkjpafqogiqns:[Vpg9nTkpV685^fEn]@aws-0-eu-central-1.pooler.supabase.com:6543/postgres
+      - DATABASE_URL=postgresql://bookstore_postgres_frz9_user:TrXiy6SFYKkRJknJLaauPiHGgiAXLWUN@dpg-cr53r4ij1k6c7392p8v0-a/bookstore_postgres_frz9
     volumes:
       - .:/code
     ports:
