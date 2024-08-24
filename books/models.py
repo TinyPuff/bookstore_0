@@ -20,7 +20,7 @@ class Book(models.Model):
     details = models.TextField(max_length=1000, default="")
 
     class Meta:
-        index = [
+        indexes = [
             models.Index(fields=["id"], name="id_index")
         ]
         permissions = [
