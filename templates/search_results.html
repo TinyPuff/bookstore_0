@@ -1,15 +1,16 @@
 {% extends '_base.html' %}
+
 {% load tag_library %}
+
+{% load humanize %}
 
 {% block title %}Search Results{% endblock title %}
 
 {% block content %}
     <h1>Search Results</h1>
-    {% for book in books %}
-        <div>
-            <h3><a href="{{ book.get_absolute_url }}">{{ book.title }}</a></h3>
-            <p>Author: {{ book.author }}</p>
-            <p>Price: {{ book.price|to_int }} IRR</p>
-        </div>
-    {% endfor %}
+    <div class="list-group">
+        {% for book in books %}
+            <a href="{{ book.get_absolute_url }}" class="list-group-item list-group-item-action list-group-item-info"><i>{{ book.title }}</i> by <b>{{ book.author }}</b> | <small class="list-text text-muted">{{ book.price|to_int|intcomma }} IRR</small></a>
+        {% endfor %}
+    </div>
 {% endblock content %}
