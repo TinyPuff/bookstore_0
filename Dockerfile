@@ -10,3 +10,5 @@ COPY Pipfile Pipfile.lock /code/
 RUN pip install pipenv && pipenv install --system
 # Copy project
 COPY . /code/
+# Make port 8000 available
+EXPOSE 8000

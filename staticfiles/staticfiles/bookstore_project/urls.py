@@ -16,16 +16,25 @@ Including another URLconf
 """
 from django.contrib import admin
 from django.urls import path, include
+from django.conf import settings
+from django.conf.urls.static import static
+from azbankgateways.urls import az_bank_gateways_urls
+from orders.views import go_to_gateway_view, callback_gateway_view
 
 urlpatterns = [
     # Django admin
-    path('admin/', admin.site.urls),
+    path('chapelofghouls/', admin.site.urls),
 
     # User management
-    path('accounts/', include('django.contrib.auth.urls')),
+    # path('accounts/', include('django.contrib.auth.urls')), # built-in auth app
+    path('accounts/', include('allauth.urls')),
+    path("bankgateways/", az_bank_gateways_urls()),
+    path('go-to-gateway/', go_to_gateway_view, name='gtgateway'),
+    path('callback-gateway/', callback_gateway_view, name="callback-gateway"),
 
     # Local apps
     path('', include('pages.urls')),
-    path('accounts/', include('users.urls')),
+    # path('orders/', include('orders.urls')),
+    # path('accounts/', include('users.urls')), # only needed when using django's built-in auth app
     
-]
+] + static(settings.MEDIA_URL, document_root=settings.MEDIA_ROOT)

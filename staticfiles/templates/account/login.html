@@ -1,0 +1,46 @@
+{% extends '_base.html' %}
+
+{% load crispy_forms_tags %}
+
+{% block title %}Log In{% endblock title %}
+
+{% block content %}
+    <h3>Log In</h3>
+    <div class="container">
+        <form method="post">{% csrf_token %}
+            {% if form.non_field_errors %}
+                <div class="alert alert-danger">
+                    {{ form.non_field_errors }}
+                </div>
+            {% endif %}
+                    
+            <!-- Username/Email Field -->
+            <div class="input-group mb-3">
+                <div class="input-group-prepend" id="inputEmail">
+                    <span class="input-group-text" id="basic-addon1">@</span>
+                </div>
+                <input type="text" name="{{ form.login.name }}" class="form-control custom-input-class" id="{{ form.login.id_for_label }}" placeholder="E-mail Address" aria-label="Email" aria-describedby="basic-addon1" required>
+                {% if form.login.errors %}
+                    <div class="text-danger">
+                        {{ form.login.errors }}
+                    </div>
+                {% endif %}
+            </div>
+            
+            <!-- Password Field -->
+            <div class="input-group">
+                <div class="input-group-prepend" id="inputPassword">
+                    <span class="input-group-text" id="basic-addon1"><samp>**</samp></span>
+                </div>
+                <input type="password" name="{{ form.password.name }}" class="form-control custom-input-class" id="{{ form.password.id_for_label }}" placeholder="Password" aria-label="Password" aria-describedby="basic-addon1" required>
+                {% if form.password.errors %}
+                    <div class="text-danger">
+                        {{ form.password.errors }}
+                    </div>
+                {% endif %}
+            </div>
+            <button class="btn btn-primary" type="submit">Log In</button>
+        </form>
+    </div>
+      
+{% endblock content %}

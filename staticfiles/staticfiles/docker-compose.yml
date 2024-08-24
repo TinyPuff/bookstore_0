@@ -1,8 +1,17 @@
 version: '2.28.1'
 services:
+  redis:
+    image: "redis:alpine"
   web:
     build: .
-    command: python /code/manage.py runserver 0.0.0.0:8000
+    command: gunicorn bookstore_project.wsgi -b 0.0.0.0:8000
+    environment:
+      - ENVIRONMENT=development
+      - SECRET_KEY=v$$kh8!kpsk%^b$$a!sm8mzo76a7q5%3v9dy&ychqoadysvp&3@wf645j*mrw%
+      - DEBUG=1
+      - MERCHANT_SECRET_KEY=zibal
+      - REDIS_HOST=redis
+      - REDIS_PORT=6379
     volumes:
       - .:/code
     ports:
