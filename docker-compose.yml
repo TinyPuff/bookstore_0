@@ -4,9 +4,8 @@ services:
     image: "redis:alpine"
   web:
     build: .
-    command: gunicorn bookstore_project.wsgi -b 0.0.0.0:8000
+    command: python /code/manage.py runserver 0.0.0.0:8000
     environment:
-      - ENVIRONMENT=development
       - SECRET_KEY=v$$kh8!kpsk%^b$$a!sm8mzo76a7q5%3v9dy&ychqoadysvp&3@wf645j*mrw%
       - DEBUG=1
       - MERCHANT_SECRET_KEY=zibal
@@ -16,14 +15,3 @@ services:
       - .:/code
     ports:
       - 8000:8000
-    depends_on:
-      - db
-  db:
-    image: postgres:16
-    volumes:
-      - postgres_data:/var/lib/postgresql/data/
-    restart: always
-    environment:
-      POSTGRES_PASSWORD: postgres
-volumes:
-  postgres_data:
