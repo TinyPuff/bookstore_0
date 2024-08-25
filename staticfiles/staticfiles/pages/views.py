@@ -26,13 +26,11 @@ class BooksPageView(LoginRequiredMixin, ListView):
     context_object_name = 'books'
     login_url = 'account_login'
 
-class BookDetailsPageView(LoginRequiredMixin, PermissionRequiredMixin, DetailView):
+class BookDetailsPageView(LoginRequiredMixin, DetailView):
     model = Book
     template_name = 'book_details.html'
     context_object_name = 'book'
     login_url = 'account_url'
-    permission_required = 'books.special_status'
-    permission_denied_message = "You don't have the permission to view this page."
 
     def get(self, request, *args, **kwargs):
         # Call the parent get method to retrieve the product
