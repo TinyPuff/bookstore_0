@@ -12,11 +12,13 @@ https://docs.djangoproject.com/en/5.0/ref/settings/
 
 from pathlib import Path
 import os
+from dotenv import load_dotenv
 
 # Build paths inside the project like this: BASE_DIR / 'subdir'.
 BASE_DIR = Path(__file__).resolve().parent.parent
 
 # Environment
+load_dotenv()
 ENVIRONMENT = os.environ.get('ENVIRONMENT', default="development")
 
 # Quick-start development settings - unsuitable for production
@@ -28,7 +30,8 @@ SECRET_KEY = os.environ.get('SECRET_KEY')
 # SECURITY WARNING: don't run with debug turned on in production!
 DEBUG = int(os.environ.get('DEBUG', default=0))
 
-ALLOWED_HOSTS = ['.herokuapp.com', 'localhost', '127.0.0.1']
+ALLOWED_HOSTS = ['puff.pythonanywhere.com', 'localhost', '127.0.0.1']
+CSRF_TRUSTED_ORIGINS = ['https://puff.pythonanywhere.com']
 
 
 # Application definition
@@ -100,6 +103,13 @@ WSGI_APPLICATION = 'bookstore_project.wsgi.application'
 
 DATABASES = {
     'default': {
+        'ENGINE': 'django.db.backends.sqlite3',
+        'NAME': BASE_DIR / 'db.sqlite3',
+    }
+}
+
+"""DATABASES = {
+    'default': {
         'ENGINE': 'django.db.backends.postgresql',
         'NAME': 'postgres',
         'USER': 'postgres',
@@ -107,7 +117,7 @@ DATABASES = {
         'HOST': 'db',
         'PORT': 5432
     }
-}
+}""" # local
 
 
 # Password validation
@@ -245,6 +255,6 @@ if ENVIRONMENT=="production":
     SECURE_CONTENT_TYPE_NOSNIFF = True
 
 # Heroku
-import dj_database_url
-db_from_env = dj_database_url.config(conn_max_age=500)
-DATABASES['default'].update(db_from_env)
+# import dj_database_url
+# db_from_env = dj_database_url.config(conn_max_age=500)
+# DATABASES['default'].update(db_from_env)
