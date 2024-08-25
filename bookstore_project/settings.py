@@ -159,7 +159,7 @@ USE_TZ = True
 
 STATIC_URL = '/static/'
 STATICFILES_DIRS = ['/home/puff/puff.pythonanywhere.com/static/',]
-STATIC_ROOT = 'staticfiles'
+STATIC_ROOT = '/home/puff/puff.pythonanywhere.com/staticfiles/'
 STATICFILES_FINDERS = [
     "django.contrib.staticfiles.finders.FileSystemFinder",
     "django.contrib.staticfiles.finders.AppDirectoriesFinder",
@@ -168,7 +168,7 @@ STATICFILES_FINDERS = [
 # Media files
 
 MEDIA_URL = '/media/'
-MEDIA_ROOT = os.path.join(BASE_DIR, 'media')
+MEDIA_ROOT = '/home/puff/puff.pythonanywhere.com/media/'
 
 # Default primary key field type
 # https://docs.djangoproject.com/en/5.0/ref/settings/#default-auto-field
