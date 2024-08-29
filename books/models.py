@@ -18,6 +18,7 @@ class Book(models.Model):
     author = models.CharField(max_length=250)
     price = models.DecimalField(max_digits=11, decimal_places=2)
     details = models.TextField(max_length=1000, default="")
+    stock = models.PositiveIntegerField(default=0)
 
     class Meta:
         indexes = [

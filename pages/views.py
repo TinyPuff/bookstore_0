@@ -4,11 +4,14 @@ from django.contrib.auth.mixins import (
     PermissionRequiredMixin,
 )
 from django.db.models.query import QuerySet
-from django.shortcuts import render, get_object_or_404
-from django.views.generic import TemplateView, ListView, DetailView
+from django.shortcuts import render, get_object_or_404, redirect
+from django.views.generic import TemplateView, ListView, DetailView, View
 from django.contrib.auth import get_user_model
 from books.models import Book
 from django.db.models import Q
+from orders.models import Cart
+from django.contrib import messages
+from allauth.account.models import EmailAddress
 
 # Create your views here.
 
@@ -53,3 +56,45 @@ class SearchResultsPageView(ListView):
         return Book.objects.filter(
             Q(title__icontains=query) | Q(author__icontains=query)
         )
+    
+class CartPageView(LoginRequiredMixin, ListView):
+    model = Cart
+    template_name = "shoppingcart.html"
+    context_object_name = "cartitems"
+
+    def get_queryset(self):
+        email = EmailAddress.objects.get(user=self.request.user)
+        return Cart.objects.filter(user=email)
+    
+class AddToCartView(LoginRequiredMixin, View):
+    def post(self, request, product_id):
+        product = get_object_or_404(Book, id=product_id)
+
+        # check if that product is in stock
+        if product.stock >= 1:
+            cart_item, created = Cart.objects.get_or_create(user=self.request.user, product=product)
+        
+        # if the item is already in the cart and the quantity doesn't exceed the amount in stock, increase the quantity.
+        if (not created) and ((cart_item.quantity + 1 ) <= product.stock):
+            cart_item.quantity += 1
+        cart_item.save()
+
+        messages.success(request, f"Added 1 x {product.title} to your cart.")
+        return redirect('cart')
+
+class DeleteFromCartView(LoginRequiredMixin, View):
+    def post(self, request, product_id):
+        cart_item = get_object_or_404(Cart, id=product_id)
+
+        if cart_item.quantity > 1:
+            cart_item.quantity -= 1
+            cart_item.save()
+        elif cart_item.quantity <= 1:
+            cart_item.delete()
+        
+        # cart_item.save() isn't working
+        messages.success(request, f"Removed 1 x {cart_item.product.title} from your cart.")
+        return redirect('cart')
+        
+# To-Do: Let the users change the quantity from the cart and also the book_details page.
+# Add a Check-Out button to the cart.

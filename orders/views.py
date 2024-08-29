@@ -1,5 +1,4 @@
 from django.shortcuts import render, redirect, get_object_or_404
-from django.views.generic import TemplateView
 import logging
 from django.urls import reverse
 from django.http import HttpResponse, Http404
@@ -10,7 +9,6 @@ from azbankgateways import (
 )
 from azbankgateways.exceptions import AZBankGatewaysException
 from books.models import Book
-from pages.views import BookDetailsPageView
 
 # Create your views here.
     
@@ -82,6 +80,5 @@ def callback_gateway_view(request):
     )
     
 
-class OrdersPageView(TemplateView):
-    template_name = "orders.html"
+
 
