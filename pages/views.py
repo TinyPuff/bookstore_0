@@ -162,3 +162,5 @@ class EditCartView(LoginRequiredMixin, View):
 
 # To-Do: Let the users change the quantity from the cart and also the book_details page.
 # Add a Check-Out button to the cart and fix the callback
+# Use Wagtail CMS for content management.
+# Use Tailwind CSS for the templates.

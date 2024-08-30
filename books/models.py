@@ -5,6 +5,14 @@ from django.contrib.auth import get_user_model
 
 # Create your models here.
 
+class Category(models.Model):
+    title = models.CharField(max_length=100)
+
+    class Meta:
+        verbose_name_plural = 'Categories'
+
+    def __str__(self):
+        return self.title
 
 class Book(models.Model):
     id = models.UUIDField(
@@ -19,6 +27,7 @@ class Book(models.Model):
     price = models.DecimalField(max_digits=11, decimal_places=2)
     details = models.TextField(max_length=1000, default="")
     stock = models.PositiveIntegerField(default=0)
+    category = models.ForeignKey(Category, null=True, on_delete=models.SET_NULL)
 
     class Meta:
         indexes = [
