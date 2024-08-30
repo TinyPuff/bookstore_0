@@ -1,6 +1,6 @@
 from django.urls import path
 from .views import (HomePageView, AboutPageView, BooksPageView, BookDetailsPageView, SearchResultsPageView, CartPageView,
-AddToCartView, DeleteFromCartView,
+AddToCartView, DeleteFromCartView, EditCartView,
 )
 
 urlpatterns = [
@@ -11,5 +11,6 @@ urlpatterns = [
     path('search/', SearchResultsPageView.as_view(), name='search_results'),
     path('cart/', CartPageView.as_view(), name='cart'),
     path('addtocart/<uuid:product_id>/', AddToCartView.as_view(), name='addtocart'),
-    path('deletefromcart/<int:product_id>/', DeleteFromCartView.as_view(), name='deletefromcart')
+    path('deletefromcart/<int:product_id>/', DeleteFromCartView.as_view(), name='deletefromcart'),
+    path('editcart/<int:product_id>/', EditCartView.as_view(), name='editcart'),
 ]

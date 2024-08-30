@@ -12,6 +12,7 @@ from django.db.models import Q
 from orders.models import Cart
 from django.contrib import messages
 from allauth.account.models import EmailAddress
+from django.http import HttpResponseRedirect
 
 # Create your views here.
 
@@ -74,31 +75,46 @@ class AddToCartView(LoginRequiredMixin, View):
     def post(self, request, product_id):
         product = get_object_or_404(Book, id=product_id)
         email = EmailAddress.objects.get(user=self.request.user)
-        expected_quantity = int(request.session.get('selected_product_stock'))
-
-        # Get the product quantity from the form POST data 
-        product_quantity = int(request.POST.get('product_quantity'))
+        # expected_quantity = int(request.session.get('selected_product_stock'))
 
         # I think this part is completely unnecessary (the whole session thing)...
-        if expected_quantity == product_quantity:
-            # check if that product is in stock
-            if product.stock >= 1:
+        # if expected_quantity == product_quantity:
+        # check if that product is in stock
+        try:
+            # Get the product quantity from the form POST data 
+            product_quantity = int(request.POST.get('product_quantity'))
+            if product.stock >= 1 and product_quantity > 0:
                 cart_item, created = Cart.objects.get_or_create(user=email, product=product)
+            else:
+                return HttpResponseRedirect(self.request.META['HTTP_REFERER'])
             
-            # if the item is already in the cart and the quantity doesn't exceed the amount in stock, increase the quantity.
+            msg = f"Added {product_quantity} x {product.title} to your cart."
+            # if the item is already in the cart and the requested quantity doesn't exceed the amount in stock, increase the quantity.
             if (not created) and ((cart_item.quantity + product_quantity ) <= product.stock):
                 cart_item.quantity += product_quantity
-            elif created:
+                messages.success(request, msg)
+            # if the item isn't in the cart and the requested quantity doesn't exceed the amount in stock, add to cart.
+            elif created and (product_quantity <= product.stock):
                 cart_item.quantity = product_quantity
+                messages.success(request, msg)
+            # if the requested quantity exceeds the amount in stock, redirect to book page.
+            elif (not created) and (((cart_item.quantity + product_quantity ) > product.stock) or (product_quantity > product.stock)) :
+                if ((product_quantity - product.stock) <= 0) and (cart_item.quantity != product.stock):
+                    cart_item.quantity = product.stock
+                    cart_item.save()
+                    messages.success(request, f"Added {product.stock} x {product.title} to your cart.")
+                    return redirect('cart')
+                else:
+                    messages.error(request, "The requested quantity exceeds the amount in stock.")
+                    return HttpResponseRedirect(self.request.META['HTTP_REFERER'])
 
             cart_item.save()
 
-            messages.success(request, f"Added 1 x {product.title} to your cart.")
-
 
             return redirect('cart')
-        else:
-            return redirect(f'books/{product.id}/')
+        except:
+            messages.error(request, "Invalid input.")
+            return HttpResponseRedirect(self.request.META['HTTP_REFERER'])
 
 class DeleteFromCartView(LoginRequiredMixin, View):
     login_url = 'account_login'
@@ -112,9 +128,37 @@ class DeleteFromCartView(LoginRequiredMixin, View):
         elif cart_item.quantity <= 1:
             cart_item.delete()
         
-        # cart_item.save() isn't working
         messages.success(request, f"Removed 1 x {cart_item.product.title} from your cart.")
         return redirect('cart')
         
+
+class EditCartView(LoginRequiredMixin, View):
+    login_url = 'account_login'
+
+    def post(self, request, product_id):
+        try:
+            cart_item = get_object_or_404(Cart, id=product_id)
+            product_quantity = int(self.request.POST.get('product_quantity'))
+
+            if product_quantity == 0:
+                cart_item.delete()
+                messages.success(request, f"{cart_item.product.title} has been removed from cart.")
+                return redirect('cart')
+            elif product_quantity == cart_item.quantity:
+                return redirect('cart')
+            elif product_quantity != cart_item.quantity:
+                if product_quantity <= cart_item.product.stock:
+                    cart_item.quantity = product_quantity
+                    messages.success(request, f"You now have {cart_item.quantity} x {cart_item.product.title} in your cart.")
+                    cart_item.save()
+                    return redirect('cart')
+                elif product_quantity > cart_item.product.stock:
+                    messages.error(request, "The requested quantity exceeds the amount in stock.")
+                    return redirect('cart')
+        except:
+            messages.error(request, "Invalid input.")
+            return redirect('cart')
+        
+
 # To-Do: Let the users change the quantity from the cart and also the book_details page.
-# Add a Check-Out button to the cart.
+# Add a Check-Out button to the cart and fix the callback
