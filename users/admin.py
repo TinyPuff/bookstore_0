@@ -24,6 +24,6 @@ class CustomEmailAddressAdmin(EmailAddressAdmin):
     inlines = [CartInline]
 
 
-# admin.site.register(CustomUser, CustomUserAdmin)
+admin.site.register(CustomUser, CustomUserAdmin)
 admin.site.unregister(EmailAddress)
 admin.site.register(EmailAddress, CustomEmailAddressAdmin)
