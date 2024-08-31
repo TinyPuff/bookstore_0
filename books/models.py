@@ -27,7 +27,7 @@ class Book(models.Model):
     price = models.DecimalField(max_digits=11, decimal_places=2)
     details = models.TextField(max_length=1000, default="")
     stock = models.PositiveIntegerField(default=0)
-    category = models.ForeignKey(Category, null=True, on_delete=models.SET_NULL)
+    category = models.ManyToManyField(Category)
 
     class Meta:
         indexes = [
@@ -39,6 +39,16 @@ class Book(models.Model):
     
     def get_absolute_url(self):
         return reverse("book_details", args=[str(self.pk)])
+    
+class BookCategory(models.Model):
+    book = models.ForeignKey(Book, on_delete=models.CASCADE)
+    category = models.ForeignKey(Category, on_delete=models.CASCADE)
+
+    class Meta:
+        unique_together = ('book', 'category')
+
+    def __str__(self):
+        return f"{self.book.title}({self.category.title})"
 
 class Review(models.Model):
 

@@ -1,22 +1,22 @@
 {% extends '_base.html' %}
 
+{% load humanize %}
+{% load tag_library %}
+
 {% block title %}{{ book.author }} - {{ book.title }}{% endblock title %}
 
 {% block content %}
     <h3>{{ book.author }} - {{ book.title }} | <code>{{ book.stock }} left in stock</code></h3>
+    <p class="text-muted">{{ book.category.title }}</p>
     <div class="book-details">
         {% if book.cover %}
             <img src="{{ book.cover.url }}" class="cover" alt="{{ book.title }}">
         {% else %}
             <p>No cover uploaded.</p>
         {% endif %}
-        <p>Price: ${{ book.price }}</p>
+        <p>Price: {{ book.price|to_int|intcomma }} IRR</p>
         <p>{{ book.details }}</p>
         {% if book.stock != 0 %}
-            <form action="{% url 'gtgateway' %}" method="post">{% csrf_token %}
-                <input type="hidden" name="product_id" value="{{ book.pk }}" />
-                <button class="btn btn-success" type="submit">Purchase</button>
-            </form>
             <form action="{% url 'addtocart' book.id %}" method="post">{% csrf_token %}
                 <input type="number" name="product_quantity" value="1" min="0" max="{{ book.stock }}" />
                 <button class="btn btn-primary" type="submit">Add to Cart</button>

@@ -9,22 +9,20 @@ from azbankgateways import (
 )
 from azbankgateways.exceptions import AZBankGatewaysException
 from books.models import Book
-from pages.views import cart_view
-from allauth.account.models import EmailAddress
-from .models import Cart
 
 # Create your views here.
-    
+# This view is for when there's a Purchase button in the book_details page only
 
 def go_to_gateway_view(request):
     # خواندن مبلغ از هر جایی که مد نظر است
     if request.method == 'POST':
+        # Get the product ID and amount from the session
+        expected_product_id = request.session.get('selected_product_id')
+        expected_price = request.session.get('selected_product_price')
+
         # Get the product ID and amount from the form POST data
-        email = EmailAddress.objects.get(user=request.user)
-        cart_items = Cart.objects.filter(user=email)
-        price = 0
-        for item in cart_items:
-            price += item.product.price * item.quantity
+        product_id = request.POST.get('product_id')
+        price = int(get_object_or_404(Book, id=product_id).price)
 
     # amount = 50000
     # تنظیم شماره موبایل کاربر از هر جایی که مد نظر است
@@ -32,26 +30,30 @@ def go_to_gateway_view(request):
 
     factory = bankfactories.BankFactory()
 
-    try:
-        bank = (
-            factory.create(bank_models.BankType.ZIBAL)
-        )  # or factory.create(bank_models.BankType.BMI) or set identifier
-        bank.set_request(request)
-        bank.set_amount(price)
-        # یو آر ال بازگشت به نرم افزار برای ادامه فرآیند
-        bank.set_client_callback_url(reverse("callback-gateway"))
-        bank.set_mobile_number(user_mobile_number)  # اختیاری
+    # Validate that the POSTed product ID and amount match the session data
+    if str(product_id) == str(expected_product_id) and price == int(expected_price): 
+        try:
+            bank = (
+                factory.create(bank_models.BankType.ZIBAL)
+            )  # or factory.create(bank_models.BankType.BMI) or set identifier
+            bank.set_request(request)
+            bank.set_amount(price)
+            # یو آر ال بازگشت به نرم افزار برای ادامه فرآیند
+            bank.set_client_callback_url(reverse("callback-gateway"))
+            bank.set_mobile_number(user_mobile_number)  # اختیاری
 
-        # در صورت تمایل اتصال این رکورد به رکورد فاکتور یا هر چیزی که بعدا بتوانید ارتباط بین محصول یا خدمات را با این
-        # پرداخت برقرار کنید.
-        bank_record = bank.ready()
+            # در صورت تمایل اتصال این رکورد به رکورد فاکتور یا هر چیزی که بعدا بتوانید ارتباط بین محصول یا خدمات را با این
+            # پرداخت برقرار کنید.
+            bank_record = bank.ready()
 
-        # هدایت کاربر به درگاه بانک
-        context = bank.get_gateway()
-        return render(request, "redirect_to_bank.html", context=context)
-    except AZBankGatewaysException as e:
-        logging.critical(e)
-        return render(request, "redirect_to_bank.html")
+            # هدایت کاربر به درگاه بانک
+            context = bank.get_gateway()
+            return render(request, "redirect_to_bank.html", context=context)
+        except AZBankGatewaysException as e:
+            logging.critical(e)
+            return render(request, "redirect_to_bank.html")
+    else:
+        return redirect(f"/book/{expected_product_id}/")
     
 
 def callback_gateway_view(request):

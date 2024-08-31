@@ -12,7 +12,8 @@ from django.db.models import Q
 from orders.models import Cart
 from django.contrib import messages
 from allauth.account.models import EmailAddress
-from django.http import HttpResponseRedirect
+from django.http import HttpResponseRedirect, HttpResponse
+from .forms import SearchForm
 
 # Create your views here.
 
@@ -58,6 +59,35 @@ class SearchResultsPageView(ListView):
         return Book.objects.filter(
             Q(title__icontains=query) | Q(author__icontains=query)
         )
+
+def search_results_view(request):
+    template = 'search_results.html'
+    context = {}
+    context['search_form'] = SearchForm()
+    if request.method == 'GET':
+        # querysets
+        try:
+            form = {}
+            query = Q()
+            form['title'] = request.GET.get('title')
+            form['author'] = request.GET.get('author')
+            form['category'] = request.GET.get('category')
+            for key, value in form.items():
+                if value:
+                    if key == 'title':
+                        query &= Q(title__icontains=value)
+                    elif key == 'author':
+                        query &= Q(author__icontains=value)
+                    elif key == 'category':
+                        query &= Q(category__exact=value)
+            results = Book.objects.filter(query)
+        except:
+            query = request.GET.get('q')
+            results = Book.objects.filter(
+                Q(title__icontains=query) | Q(title__icontains=query)
+            )
+        context['results'] = results
+        return render(request, template, context)
     
 class CartPageView(LoginRequiredMixin, ListView):
     model = Cart
@@ -68,6 +98,16 @@ class CartPageView(LoginRequiredMixin, ListView):
     def get_queryset(self):
         email = EmailAddress.objects.get(user=self.request.user)
         return Cart.objects.filter(user=email)
+    
+# make it so that only the signed-in users can view the shopping cart page
+def cart_view(request):
+    email = EmailAddress.objects.get(user=request.user)
+    cart_items = Cart.objects.filter(user=email)
+    template = 'shoppingcart2.html'
+    total_price = 0
+    for item in cart_items:
+        total_price += item.product.price * item.quantity
+    return render(request, template, {'cartitems': cart_items, 'total': total_price})
     
 class AddToCartView(LoginRequiredMixin, View):
     login_url = 'account_login'
@@ -159,6 +199,7 @@ class EditCartView(LoginRequiredMixin, View):
             messages.error(request, "Invalid input.")
             return redirect('cart')
         
+
 
 # To-Do: Let the users change the quantity from the cart and also the book_details page.
 # Add a Check-Out button to the cart and fix the callback

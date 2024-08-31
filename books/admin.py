@@ -1,5 +1,5 @@
 from django.contrib import admin
-from .models import Category, Book, Review
+from .models import Category, Book, Review, BookCategory
 
 # Register your models here.
 
@@ -14,13 +14,13 @@ class BookAdmin(admin.ModelAdmin):
     ]
     list_display = ("title", "author", "price", "stock")
 
-class BookInline(admin.TabularInline):
-    model = Book
+class BookCategoryInline(admin.TabularInline):
+    model = BookCategory
     extra = 0
 
 class CategoryAdmin(admin.ModelAdmin):
     inlines = [
-        BookInline
+        BookCategoryInline
     ]
 
 
