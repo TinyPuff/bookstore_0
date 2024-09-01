@@ -10,10 +10,3 @@ from allauth.account.models import EmailAddress
 class CustomUser(AbstractUser):
     pass
 
-
-class UserProfile(models.Model):
-    user = models.OneToOneField(EmailAddress, on_delete=models.CASCADE)
-    owned_books = models.ManyToManyField(Book, related_name='owners')
-
-    def __str__(self):
-        return self.user.email

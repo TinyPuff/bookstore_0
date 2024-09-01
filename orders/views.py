@@ -11,8 +11,7 @@ from azbankgateways.exceptions import AZBankGatewaysException
 from books.models import Book
 from pages.views import cart_view
 from allauth.account.models import EmailAddress
-from .models import Cart
-from users.models import UserProfile
+from .models import Cart, OrderInfo, OrderedProductsInfo
 
 # Create your views here.
     
@@ -84,10 +83,21 @@ def callback_gateway_view(request):
         # پرداخت با موفقیت انجام پذیرفته است و بانک تایید کرده است.
         # می توانید کاربر را به صفحه نتیجه هدایت کنید یا نتیجه را نمایش دهید.
         email = EmailAddress.objects.get(user=request.user)
+        # add to orders db
+        order_info = OrderInfo.objects.create(
+            gateway_id=int(bank_record.pk),
+            user=email,
+            price=(bank_record.amount),
+            tracking_code=tracking_code,
+        )
         cart_items = Cart.objects.filter(user=email).all()
-        user_profile, created = UserProfile.objects.get_or_create(user=email)
+        ordered_items_info = OrderedProductsInfo.objects
         for item in cart_items:
-            user_profile.owned_books.add(item.product)
+            OrderedProductsInfo.objects.create(
+                order=OrderInfo.objects.get(tracking_code=tracking_code),
+                product=item.product,
+                quantity=item.quantity,
+            )
         cart_items.delete()
         # return HttpResponse("پرداخت با موفقیت انجام شد.")
         # make it so that the data in the session will be reset and deleted after the success page is shown

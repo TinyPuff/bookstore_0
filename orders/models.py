@@ -13,9 +13,20 @@ class OrderInfo(models.Model):
     tracking_code = models.PositiveBigIntegerField()
     post_tracking_code = models.PositiveBigIntegerField(default=0) # this one is different from the tracking code seen in the bank gateway. it's for the postal office.
     # add the products and their quantities here
+    
+    class Meta:
+        verbose_name_plural = 'Order Info'
 
     def __str__(self):
         return f"{self.user} ({self.gateway_id})"
+
+class OrderedProductsInfo(models.Model):
+    order = models.ForeignKey(OrderInfo, on_delete=models.CASCADE)
+    product = models.ForeignKey(Book, on_delete=models.CASCADE)
+    quantity = models.PositiveIntegerField(default=0)
+
+    def __str__(self):
+        return f"{self.quantity} x {self.product}"
 
 # add purchased products page
 
