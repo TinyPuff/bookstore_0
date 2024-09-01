@@ -12,6 +12,7 @@ from books.models import Book
 from pages.views import cart_view
 from allauth.account.models import EmailAddress
 from .models import Cart
+from users.models import UserProfile
 
 # Create your views here.
     
@@ -45,6 +46,8 @@ def go_to_gateway_view(request):
         # در صورت تمایل اتصال این رکورد به رکورد فاکتور یا هر چیزی که بعدا بتوانید ارتباط بین محصول یا خدمات را با این
         # پرداخت برقرار کنید.
         bank_record = bank.ready()
+        print(bank_record.tracking_code)
+        request.session['tracking_code'] = str(bank_record.tracking_code)
 
         # هدایت کاربر به درگاه بانک
         context = bank.get_gateway()
@@ -53,6 +56,16 @@ def go_to_gateway_view(request):
         logging.critical(e)
         return render(request, "redirect_to_bank.html")
     
+def successful_payment(request):
+    template = 'success.html'
+    tracking_code = request.session.get('tracking_code')
+    context = {}
+    context['tracking_code'] = tracking_code
+    for key in list(request.session.keys()):
+        if not key.startswith("_"):
+            del request.session[key]
+    return render(request, template, context)
+
 
 def callback_gateway_view(request):
     tracking_code = request.GET.get(settings.TRACKING_CODE_QUERY_PARAM, None)
@@ -70,7 +83,15 @@ def callback_gateway_view(request):
     if bank_record.is_success:
         # پرداخت با موفقیت انجام پذیرفته است و بانک تایید کرده است.
         # می توانید کاربر را به صفحه نتیجه هدایت کنید یا نتیجه را نمایش دهید.
-        return HttpResponse("پرداخت با موفقیت انجام شد.")
+        email = EmailAddress.objects.get(user=request.user)
+        cart_items = Cart.objects.filter(user=email).all()
+        user_profile, created = UserProfile.objects.get_or_create(user=email)
+        for item in cart_items:
+            user_profile.owned_books.add(item.product)
+        cart_items.delete()
+        # return HttpResponse("پرداخت با موفقیت انجام شد.")
+        # make it so that the data in the session will be reset and deleted after the success page is shown
+        return redirect('success')
 
     # پرداخت موفق نبوده است. اگر پول کم شده است ظرف مدت ۴۸ ساعت پول به حساب شما بازخواهد گشت.
     return HttpResponse(

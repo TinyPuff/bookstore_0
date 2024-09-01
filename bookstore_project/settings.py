@@ -56,9 +56,9 @@ INSTALLED_APPS = [
     'whitenoise.runserver_nostatic',
 
     # Local
-    'users.apps.UsersConfig',
     'pages.apps.PagesConfig',
     'books.apps.BooksConfig',
+    'users.apps.UsersConfig',
     'orders.apps.OrdersConfig',
 ]
 

@@ -2,6 +2,7 @@ from django.urls import path
 from .views import (HomePageView, AboutPageView, BooksPageView, BookDetailsPageView, SearchResultsPageView, CartPageView,
 AddToCartView, DeleteFromCartView, EditCartView, cart_view, search_results_view
 )
+from orders.views import successful_payment
 
 urlpatterns = [
     path('', HomePageView.as_view(), name='home'),
@@ -15,4 +16,5 @@ urlpatterns = [
     path('editcart/<int:product_id>/', EditCartView.as_view(), name='editcart'),
     path('cart/', cart_view, name='cart'),
     path('search/', search_results_view, name='search_results'),
+    path('success/', successful_payment, name='success'),
 ]
