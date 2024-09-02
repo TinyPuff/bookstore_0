@@ -45,8 +45,9 @@ def go_to_gateway_view(request):
         # در صورت تمایل اتصال این رکورد به رکورد فاکتور یا هر چیزی که بعدا بتوانید ارتباط بین محصول یا خدمات را با این
         # پرداخت برقرار کنید.
         bank_record = bank.ready()
-        print(bank_record.tracking_code)
-        request.session['tracking_code'] = str(bank_record.tracking_code)
+        request.session['tracking_code'] = bank_record.tracking_code
+        # request.session['created_at'] = str(bank_record.created_at)
+        
 
         # هدایت کاربر به درگاه بانک
         context = bank.get_gateway()
@@ -89,21 +90,25 @@ def callback_gateway_view(request):
             user=email,
             price=(bank_record.amount),
             tracking_code=tracking_code,
+            created_at=bank_record.created_at,
+            status=bank_record.status,
         )
         cart_items = Cart.objects.filter(user=email).all()
-        ordered_items_info = OrderedProductsInfo.objects
         for item in cart_items:
             OrderedProductsInfo.objects.create(
                 order=OrderInfo.objects.get(tracking_code=tracking_code),
                 product=item.product,
                 quantity=item.quantity,
             )
+        total_products = len(OrderedProductsInfo.objects.filter(order=OrderInfo.objects.get(tracking_code=tracking_code)))
+        order_info.objects.get(tracking_code=tracking_code).total_products = total_products
         cart_items.delete()
         # return HttpResponse("پرداخت با موفقیت انجام شد.")
         # make it so that the data in the session will be reset and deleted after the success page is shown
         return redirect('success')
 
     # پرداخت موفق نبوده است. اگر پول کم شده است ظرف مدت ۴۸ ساعت پول به حساب شما بازخواهد گشت.
+    # the failed payments should be recorded and shown in the profile as well
     return HttpResponse(
         "پرداخت با شکست مواجه شده است. اگر پول کم شده است ظرف مدت ۴۸ ساعت پول به حساب شما بازخواهد گشت."
     )

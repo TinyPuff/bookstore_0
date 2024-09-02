@@ -1,6 +1,6 @@
 from django.urls import path
 from .views import (HomePageView, AboutPageView, BooksPageView, BookDetailsPageView, SearchResultsPageView, CartPageView,
-AddToCartView, DeleteFromCartView, EditCartView, cart_view, search_results_view
+AddToCartView, DeleteFromCartView, EditCartView, cart_view, search_results_view, orders_list_view, order_details_view,
 )
 from orders.views import successful_payment
 
@@ -17,4 +17,6 @@ urlpatterns = [
     path('cart/', cart_view, name='cart'),
     path('search/', search_results_view, name='search_results'),
     path('success/', successful_payment, name='success'),
+    path('orders/', orders_list_view, name='orders'),
+    path('order_details/<int:id>/', order_details_view, name='order_details'),
 ]

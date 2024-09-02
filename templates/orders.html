@@ -1,0 +1,42 @@
+{% extends '_base.html' %}
+
+{% load tag_library %}
+
+{% block title %}Orders List{% endblock title %}
+
+{% block content %}
+    <h1>Orders</h1>
+    <div class="container">
+        <table class="table table-hover">
+            <thead>
+                <tr>
+                    <th class="text-center" scope="col">#</th>
+                    <th class="text-center" scope="col">Tracking Code</th>
+                    <th class="text-center" scope="col">Total Products Ordered</th>
+                    <th class="text-center" scope="col">Status</th>
+                    <th class="text-center" scope="col">Total Price</th>
+                    <th class="text-center" scope="col">Created At</th>
+                    <th class="text-center" scope="col">Details</th>
+                </tr>
+            </thead>
+            <tbody>
+                {% for order in orders %}
+                    <tr>
+                        <th class="text-center" scope="row">{{ forloop.counter }}</th>
+                        <td class="text-center">{{ order.tracking_code }}</td>
+                        <td class="text-center">{{ order.total_products }}</td>
+                        <td class="text-center">{{ order.status }}</td>
+                        <td class="text-center">{{ order.price }}</td>
+                        <td class="text-center">{{ order.created_at }}</td>
+                        <td class="text-center">
+                            <form action="{% url 'order_details' order.id %}" method="get">{% csrf_token %}
+                                <input type="hidden" name="tracking_code" value="{{ order.tracking_code }}" />
+                                <button class="btn btn-link" type="submit">View Details</button>
+                            </form>
+                        </td>
+                    </tr>
+                {% endfor %}
+            </tbody>
+        </table>
+    </div>
+{% endblock content %}

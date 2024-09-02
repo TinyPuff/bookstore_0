@@ -9,7 +9,7 @@ from django.views.generic import TemplateView, ListView, DetailView, View
 from django.contrib.auth import get_user_model
 from books.models import Book
 from django.db.models import Q
-from orders.models import Cart
+from orders.models import Cart, OrderInfo, OrderedProductsInfo
 from django.contrib import messages
 from allauth.account.models import EmailAddress
 from django.http import HttpResponseRedirect, HttpResponse
@@ -198,8 +198,25 @@ class EditCartView(LoginRequiredMixin, View):
         except:
             messages.error(request, "Invalid input.")
             return redirect('cart')
-        
 
+
+def orders_list_view(request):
+    email = EmailAddress.objects.get(user=request.user)
+    orders = OrderInfo.objects.filter(user=email)
+    context = {'orders': orders}
+    # request.session['orders']
+    template = 'orders.html'
+    return render(request, template, context)
+
+
+def order_details_view(request, id):
+    if request.method == 'GET':
+        tracking_code = request.GET.get('tracking_code')
+        print(tracking_code)
+    order = OrderedProductsInfo.objects.filter(order=OrderInfo.objects.get(tracking_code=tracking_code))
+    context = {'order': order}
+    template = 'order_details.html'
+    return render(request, template, context)
 
 # To-Do: Let the users change the quantity from the cart and also the book_details page.
 # Add a Check-Out button to the cart and fix the callback

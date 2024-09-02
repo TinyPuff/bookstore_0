@@ -6,6 +6,8 @@ from orders.models import Cart
 from allauth.account.models import EmailAddress
 from allauth.account.admin import EmailAddressAdmin
 from orders.models import OrderInfo
+from django.urls import reverse
+from django.utils.html import format_html
 
 # Register your models here.
 
@@ -23,8 +25,14 @@ class CustomUserAdmin(UserAdmin):
 
 class OrderInfoInline(admin.TabularInline):
     model = OrderInfo
-    readonly_fields = ('gateway_id', 'user', 'price', 'tracking_code', 'post_tracking_code',)
+    readonly_fields = ('clickable_field', 'gateway_id', 'user', 'price', 'status', 'tracking_code', 'post_tracking_code', 'created_at')
+    can_delete = False
     extra = 0
+
+    def clickable_field(self, obj):
+        link = reverse('admin:orders_orderinfo_change', args=[obj.pk])
+        return format_html(f'<a href="{link}">View Details</a>')
+    clickable_field.short_description = 'Order Info'
 
 class CustomEmailAddressAdmin(EmailAddressAdmin):
     inlines = [OrderInfoInline]

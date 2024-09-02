@@ -36,6 +36,7 @@
                                 {{ user.username }}
                             </a>
                             <div class="dropdown-menu" aria-labelledby="navbarDropdown">
+                                <a class="dropdown-item" href="{% url 'orders' %}">Orders</a>
                                 <a class="dropdown-item" href="{% url 'cart' %}">Shopping Cart</a>
                                 <a class="dropdown-item" href="{% url 'account_change_password' %}">Change Password</a>
                                 <a class="dropdown-item" href="{% url 'account_reset_password' %}">Reset Password</a>

@@ -7,6 +7,7 @@ from .models import OrderInfo, OrderedProductsInfo
 
 class OrderedProductsInfoInline(admin.TabularInline):
     model = OrderedProductsInfo
+    fields = ('order', 'product', 'quantity',)
     extra = 0
 
     def get_readonly_fields(self, request, obj=None):
@@ -16,14 +17,15 @@ class OrderedProductsInfoInline(admin.TabularInline):
 
 class OrderInfoAdmin(admin.ModelAdmin):
     model = OrderInfo
-    list_display = ('gateway_id', 'user', 'price', 'tracking_code', 'post_tracking_code')
+    list_display = ('tracking_code', 'user', 'price', 'status', 'created_at', 'post_tracking_code', )
+    fields = ('gateway_id', 'user', 'total_products', 'price', 'status', 'created_at', 'tracking_code', 'post_tracking_code', )
     inlines = [
         OrderedProductsInfoInline
     ]
     
     def get_readonly_fields(self, request, obj=None):
         if obj:
-            return self.readonly_fields + self.list_display[:4]
+            return self.readonly_fields + self.fields[:7]
         return self.readonly_fields
     
 
