@@ -100,8 +100,17 @@ def callback_gateway_view(request):
                 product=item.product,
                 quantity=item.quantity,
             )
+
+        # delete duplicates
+        duplicates = OrderInfo.objects.filter(tracking_code=tracking_code)
+        if len(duplicates) > 1:
+            for i in duplicates:
+                if i != duplicates[0]:
+                    i.delete()
         total_products = len(OrderedProductsInfo.objects.filter(order=OrderInfo.objects.get(tracking_code=tracking_code)))
-        order_info.objects.get(tracking_code=tracking_code).total_products = total_products
+        OrderInfo.objects.get(tracking_code=tracking_code).total_products = total_products
+        
+        # delete cart items after success
         cart_items.delete()
         # return HttpResponse("پرداخت با موفقیت انجام شد.")
         # make it so that the data in the session will be reset and deleted after the success page is shown
