@@ -66,6 +66,16 @@ def successful_payment(request):
             del request.session[key]
     return render(request, template, context)
 
+def failed_payment(request):
+    template = 'failure.html'
+    tracking_code = request.session.get('tracking_code')
+    context = {}
+    context['tracking_code'] = tracking_code
+    for key in list(request.session.keys()):
+        if not key.startswith("_"):
+            del request.session[key]
+    return render(request, template, context)
+
 
 def callback_gateway_view(request):
     tracking_code = request.GET.get(settings.TRACKING_CODE_QUERY_PARAM, None)
@@ -78,50 +88,51 @@ def callback_gateway_view(request):
     except bank_models.Bank.DoesNotExist:
         logging.debug("این لینک معتبر نیست.")
         raise Http404
+    
+    if str(bank_record.status).lower() == 'complete':
+        status = 'Successful'
+    elif str(bank_record.status).lower() == 'cancel_by_user':
+        status = 'Failed'
+
+    email = EmailAddress.objects.get(user=request.user)
+    order_info = OrderInfo.objects.create(
+        gateway_id=int(bank_record.pk),
+        user=email,
+        price=(bank_record.amount),
+        tracking_code=tracking_code,
+        created_at=bank_record.created_at,
+        status=status,
+    )
+    # delete duplicates
+    duplicates = OrderInfo.objects.filter(tracking_code=tracking_code)
+    if len(duplicates) > 1:
+        for i in duplicates:
+            if i != duplicates[0]:
+                i.delete()
+    print(str(bank_record.status))
+    cart_items = Cart.objects.filter(user=email).all()
+    for item in cart_items:
+        OrderedProductsInfo.objects.create(
+            order=OrderInfo.objects.get(tracking_code=tracking_code),
+            product=item.product,
+            quantity=item.quantity,
+        )
+
+    total_products = len(OrderedProductsInfo.objects.filter(order=OrderInfo.objects.get(tracking_code=tracking_code)))
+    OrderInfo.objects.get(tracking_code=tracking_code).total_products = total_products
 
     # در این قسمت باید از طریق داده هایی که در بانک رکورد وجود دارد، رکورد متناظر یا هر اقدام مقتضی دیگر را انجام دهیم
     if bank_record.is_success:
         # پرداخت با موفقیت انجام پذیرفته است و بانک تایید کرده است.
         # می توانید کاربر را به صفحه نتیجه هدایت کنید یا نتیجه را نمایش دهید.
-        email = EmailAddress.objects.get(user=request.user)
-        # add to orders db
-        order_info = OrderInfo.objects.create(
-            gateway_id=int(bank_record.pk),
-            user=email,
-            price=(bank_record.amount),
-            tracking_code=tracking_code,
-            created_at=bank_record.created_at,
-            status=bank_record.status,
-        )
-        cart_items = Cart.objects.filter(user=email).all()
-        for item in cart_items:
-            OrderedProductsInfo.objects.create(
-                order=OrderInfo.objects.get(tracking_code=tracking_code),
-                product=item.product,
-                quantity=item.quantity,
-            )
 
-        # delete duplicates
-        duplicates = OrderInfo.objects.filter(tracking_code=tracking_code)
-        if len(duplicates) > 1:
-            for i in duplicates:
-                if i != duplicates[0]:
-                    i.delete()
-        total_products = len(OrderedProductsInfo.objects.filter(order=OrderInfo.objects.get(tracking_code=tracking_code)))
-        OrderInfo.objects.get(tracking_code=tracking_code).total_products = total_products
-        
         # delete cart items after success
         cart_items.delete()
-        # return HttpResponse("پرداخت با موفقیت انجام شد.")
         # make it so that the data in the session will be reset and deleted after the success page is shown
         return redirect('success')
 
     # پرداخت موفق نبوده است. اگر پول کم شده است ظرف مدت ۴۸ ساعت پول به حساب شما بازخواهد گشت.
     # the failed payments should be recorded and shown in the profile as well
-    return HttpResponse(
-        "پرداخت با شکست مواجه شده است. اگر پول کم شده است ظرف مدت ۴۸ ساعت پول به حساب شما بازخواهد گشت."
-    )
-    
-
+    return redirect('failure')
 
 

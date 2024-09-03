@@ -25,14 +25,20 @@ class CustomUserAdmin(UserAdmin):
 
 class OrderInfoInline(admin.TabularInline):
     model = OrderInfo
-    readonly_fields = ('clickable_field', 'gateway_id', 'user', 'price', 'status', 'tracking_code', 'post_tracking_code', 'created_at')
+    readonly_fields = ('clickable_field', 'gateway_id', 'user', 'price', 'total_products', 'status', 'tracking_code', 'post_tracking_code', 'created_at')
     can_delete = False
     extra = 0
+    view_on_site = False
+    show_change_link = True
 
     def clickable_field(self, obj):
         link = reverse('admin:orders_orderinfo_change', args=[obj.pk])
         return format_html(f'<a href="{link}">View Details</a>')
     clickable_field.short_description = 'Order Info'
+
+    # changing the view on site url
+"""    def get_view_on_site_url(self, obj):
+        return reverse('admin:orders_orderinfo_change', args=[obj.pk])"""
 
 class CustomEmailAddressAdmin(EmailAddressAdmin):
     inlines = [OrderInfoInline]

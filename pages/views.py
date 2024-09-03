@@ -222,3 +222,6 @@ def order_details_view(request, id):
 # Add a Check-Out button to the cart and fix the callback
 # Use Wagtail CMS for content management.
 # Use Tailwind CSS for the templates.
+# Learn pagination for this, the books list and the search results.
+# Add a category view.
+# Try to imitate Exo.ir's looks.
