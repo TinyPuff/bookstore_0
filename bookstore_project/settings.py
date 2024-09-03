@@ -213,15 +213,19 @@ AZ_IRANIAN_BANK_GATEWAYS = {
         "ZIBAL": {
             "MERCHANT_CODE": MERCHANT_CODE,
         },
+        "PAYV1": {
+            "MERCHANT_CODE": "test",
+            "X_SANDBOX": 0,  # 0 disable, 1 active
+        },
     },
     "IS_SAMPLE_FORM_ENABLE": True,  # اختیاری و پیش فرض غیر فعال است
-    "DEFAULT": "ZIBAL",
+    "DEFAULT": "PAYV1",
     "CURRENCY": "IRR",  # اختیاری
     "TRACKING_CODE_QUERY_PARAM": "tc",  # اختیاری
     "TRACKING_CODE_LENGTH": 16,  # اختیاری
     "SETTING_VALUE_READER_CLASS": "azbankgateways.readers.DefaultReader",  # اختیاری
     "BANK_PRIORITIES": [
-        "ZIBAL",
+        "PAYV1",
         # and so on ...
     ],  # اختیاری
     "IS_SAFE_GET_GATEWAY_PAYMENT": False,  # اختیاری، بهتر است True بزارید.

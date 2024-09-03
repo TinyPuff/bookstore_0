@@ -2,6 +2,7 @@ from django.shortcuts import render, redirect, get_object_or_404
 import logging
 from django.urls import reverse
 from django.http import HttpResponse, Http404
+import azbankgateways
 from azbankgateways import (
     bankfactories,
     models as bank_models,
@@ -33,8 +34,9 @@ def go_to_gateway_view(request):
     factory = bankfactories.BankFactory()
 
     try:
+        # print(str(bank_models.BankType.PAYV1))
         bank = (
-            factory.create(bank_models.BankType.ZIBAL)
+            factory.create()
         )  # or factory.create(bank_models.BankType.BMI) or set identifier
         bank.set_request(request)
         bank.set_amount(price)
@@ -46,6 +48,10 @@ def go_to_gateway_view(request):
         # پرداخت برقرار کنید.
         bank_record = bank.ready()
         request.session['tracking_code'] = bank_record.tracking_code
+        bank_object = bank_models.banks.Bank.objects.get(tracking_code=bank_record.tracking_code)
+        print(str(bank_object.bank_type))
+        bank_object.callback_url = reverse("callback-gateway")
+        print(f"Info 1: Tracking Code is: {bank_record.tracking_code}, Callback URL is: {bank_object.callback_url}")
         # request.session['created_at'] = str(bank_record.created_at)
         
 
@@ -91,7 +97,7 @@ def callback_gateway_view(request):
     
     if str(bank_record.status).lower() == 'complete':
         status = 'Successful'
-    elif str(bank_record.status).lower() == 'cancel_by_user':
+    else:
         status = 'Failed'
 
     email = EmailAddress.objects.get(user=request.user)
@@ -101,7 +107,6 @@ def callback_gateway_view(request):
         price=(bank_record.amount),
         tracking_code=tracking_code,
         created_at=bank_record.created_at,
-        status=status,
     )
     # delete duplicates
     duplicates = OrderInfo.objects.filter(tracking_code=tracking_code)
