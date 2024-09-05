@@ -1,0 +1,25 @@
+{% extends '_base.html' %}
+{% load i18n %}
+{% load account %}
+{% load allauth %}
+
+{% block title %}E-mail Confirmation{% endblock title %}
+
+{% block content %}
+    {% if confirmation %}
+        {% user_display confirmation.email_address.user as user_display %}
+        {% if can_confirm %}
+            <h3>Confirm E-mail Address</h3>
+            <form method="post">{% csrf_token %}
+                <p>{% blocktrans with confirmation.email_address.email as email %}Please confirm that <a href="mailto:{{ email }}">{{ email }}</a> is an e-mail address for {{ user_display }}.{% endblocktrans %}</p>
+                <button class="btn btn-success" type="submit">Confirm</button>
+            </form>
+        {% else %}
+            <h3>Error</h3>
+            <p>Unable to confirm email because it was already confirmed.</p>
+        {% endif %}
+    {% else %}
+            <h3>Error</h3>
+            <p>Link was either expired on invalid.</p>
+    {% endif %}
+{% endblock content %}

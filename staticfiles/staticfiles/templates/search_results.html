@@ -8,9 +8,33 @@
 
 {% block content %}
     <h1>Search Results</h1>
+    <div class="container">
+        <form action="{% url 'search_results' %}" method="get">{% csrf_token %}
+            <div>
+                <label>{{ search_form.title.label_tag }}</label>
+                <input type="text" name="{{ search_form.title.name }}" id="{{ search_form.title.id_for_label }}" placeholder="Title" />
+            </div>
+            <div>   
+                <label>{{ search_form.author.label_tag }}</label>
+                <input type="text" name="{{ search_form.author.name }}" id="{{ search_form.author.id_for_label }}" placeholder="Author" />
+            </div>
+            <div>
+                <label>Category:</label>
+                <select name="{{ search_form.category.name }}" id="{{ search_form.category.id_for_label }}">
+                    <option></option>
+                    {% for option in search_form.category %}
+                        {% if option != '' %}
+                            {{ option }}
+                        {% endif %}
+                    {% endfor %}
+                </select>
+            </div>
+            <button type="submit">Search</button>
+        </form>
+    </div>
     <div class="list-group">
-        {% for book in books %}
-            <a href="{{ book.get_absolute_url }}" class="list-group-item list-group-item-action list-group-item-info"><i>{{ book.title }}</i> by <b>{{ book.author }}</b> | <small class="list-text text-muted">{{ book.price|to_int|intcomma }} IRR</small></a>
+        {% for result in results %}
+            <a href="{{ book.get_absolute_url }}" class="list-group-item list-group-item-action list-group-item-info"><i>{{ result.title }}</i> by <b>{{ result.author }}</b> | <small class="list-text text-muted">{{ result.price|to_int|intcomma }} IRR</small></a>
         {% endfor %}
     </div>
 {% endblock content %}

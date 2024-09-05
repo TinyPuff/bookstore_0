@@ -1,0 +1,45 @@
+{% extends '_base.html' %}
+
+{% block title %}Shopping Cart{% endblock title %}
+
+{% load humanize %}
+{% load tag_library %}
+
+{% block content %}
+    <h1>Shopping Cart</h1>
+    <div class="container">
+        <span class="badge text-dark bg-warning">{{ total|to_int|intcomma }} IRR</span>
+        <form action="{% url 'gtgateway' %}" method="post">{% csrf_token %}
+            <input type="hidden" name="product_id" value="{{ user.email }}" />
+            <button class="badge rounded-pill bg-success" type="submit">Check-Out</button>
+        </form>
+        <div class="card mb-3" style="max-width: 1080px;">
+            <div class="row g-0 border border-2 border-secondary rounded">
+                {% for item in cartitems %}
+                    {% if item != last_item %} 
+                    <div class="container border-bottom border-secondary">
+                    {% elif item == last_item %}
+                    <div class ="container">
+                    {% endif %}
+                        <div class="col-md-2">
+                            <img src="{{ item.product.cover.url }}" class="img-fluid rounded-start"  style="height: 190px; width: 135px;" alt="{{ item.product.title }}">
+                        </div>
+                        <div class="col-md-7">
+                            <div class="card mb-3">
+                                <div class="card-body">
+                                    <h5 class="card-title"><a href="{% url 'book_details' item.product.id %}" class="card-link link-warning">{{ item.quantity }} x {{ item.product.title }}</a></h5>
+                                    <h6 class="card-subtitle mb-2 text-muted">{{ item.product.author }}</h6>
+                                    <p class="card-text"><code>{{ item.product.price|to_int|intcomma }} IRR</code></p> <!-- Show only the first 100 characters of the description -->
+                                    <form action="{% url 'editcart' item.id %}" method="post">{% csrf_token %}
+                                        <input type="number" name="product_quantity" value="{{ item.quantity }}" min="0" max="{{ item.product.stock }}" />
+                                        <button class="btn btn-primary" type="submit">Submit Changes</button>
+                                    </form>
+                                </div>
+                            </div>
+                        </div>
+                    </div>
+                {% endfor %}
+            </div>
+        </div>
+    </div>
+{% endblock content %}

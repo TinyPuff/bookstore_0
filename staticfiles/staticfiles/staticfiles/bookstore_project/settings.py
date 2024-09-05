@@ -48,7 +48,8 @@ INSTALLED_APPS = [
 
     # Third Party
     'crispy_forms',
-    'crispy_bootstrap4',
+    #'crispy_bootstrap4',
+    'crispy_bootstrap5',
     'allauth',
     'allauth.account',
     'anymail',
@@ -56,9 +57,9 @@ INSTALLED_APPS = [
     'whitenoise.runserver_nostatic',
 
     # Local
-    'users.apps.UsersConfig',
     'pages.apps.PagesConfig',
     'books.apps.BooksConfig',
+    'users.apps.UsersConfig',
     'orders.apps.OrdersConfig',
 ]
 
@@ -144,7 +145,7 @@ AUTH_PASSWORD_VALIDATORS = [
 
 LANGUAGE_CODE = 'en-us'
 
-TIME_ZONE = 'UTC'
+TIME_ZONE = 'Asia/Tehran'
 
 USE_I18N = True
 
@@ -154,7 +155,7 @@ USE_TZ = True
 # Static files (CSS, JavaScript, Images)
 # https://docs.djangoproject.com/en/5.0/howto/static-files/
 
-STATIC_URL = 'static/'
+STATIC_URL = '/static/'
 STATICFILES_DIRS = [BASE_DIR, 'static']
 STATIC_ROOT = 'staticfiles'
 STATICFILES_FINDERS = [
@@ -193,8 +194,8 @@ ACCOUNT_USERNAME_REQUIRED = False
 ACCOUNT_AUTHENTICATION_METHOD = "email"
 
 # crispy-forms config
-CRISPY_ALLOWED_TEMPLATE_PACKS = "bootstrap4"
-CRISPY_TEMPLATE_PACK = 'bootstrap4'
+CRISPY_ALLOWED_TEMPLATE_PACKS = "bootstrap5"
+CRISPY_TEMPLATE_PACK = 'bootstrap5'
 
 # E-mail config
 ANYMAIL = {
@@ -213,15 +214,19 @@ AZ_IRANIAN_BANK_GATEWAYS = {
         "ZIBAL": {
             "MERCHANT_CODE": MERCHANT_CODE,
         },
+        "PAYV1": {
+            "MERCHANT_CODE": "test",
+            "X_SANDBOX": 0,  # 0 disable, 1 active
+        },
     },
     "IS_SAMPLE_FORM_ENABLE": True,  # اختیاری و پیش فرض غیر فعال است
-    "DEFAULT": "ZIBAL",
+    "DEFAULT": "PAYV1",
     "CURRENCY": "IRR",  # اختیاری
     "TRACKING_CODE_QUERY_PARAM": "tc",  # اختیاری
     "TRACKING_CODE_LENGTH": 16,  # اختیاری
     "SETTING_VALUE_READER_CLASS": "azbankgateways.readers.DefaultReader",  # اختیاری
     "BANK_PRIORITIES": [
-        "ZIBAL",
+        "PAYV1",
         # and so on ...
     ],  # اختیاری
     "IS_SAFE_GET_GATEWAY_PAYMENT": False,  # اختیاری، بهتر است True بزارید.
@@ -258,3 +263,16 @@ if ENVIRONMENT=="production":
 # import dj_database_url
 # db_from_env = dj_database_url.config(conn_max_age=500)
 # DATABASES['default'].update(db_from_env)
+
+# messages
+try:
+    from django.contrib.messages import constants as messages
+    MESSAGE_TAGS = {
+        messages.DEBUG: 'alert-info',
+        messages.INFO: 'alert-info',
+        messages.SUCCESS: 'alert-success',
+        messages.WARNING: 'alert-warning',
+        messages.ERROR: 'alert-danger',
+    }
+except Exception as e:
+    pass

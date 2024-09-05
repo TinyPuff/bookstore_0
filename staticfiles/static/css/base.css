@@ -1,5 +1,5 @@
 body {
-    background-color: #121212;
+    background-color: #181a1b;
     color: #ffffff;
     font-family: 'Segoe UI', Tahoma, Geneva, Verdana, sans-serif;
 }
@@ -46,4 +46,21 @@ footer {
 img {
     height: 300px;
     width: auto;
+}
+code {
+    color: #ffc107;
+}
+i.bi.bi-trash3 {
+    color: #df4655;
+}
+.btn-outline-secondary:hover {
+    background-color: transparent;
+    vertical-align: auto;
+}
+button.btn.btn-outline-secondary:focus {
+    outline: none;
+    box-shadow: none;
+}
+a.active{
+    background-color: transparent !important;
 }

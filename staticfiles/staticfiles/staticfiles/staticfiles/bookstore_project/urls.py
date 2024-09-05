@@ -24,7 +24,6 @@ from orders.views import go_to_gateway_view, callback_gateway_view
 urlpatterns = [
     # Django admin
     path('chapelofghouls/', admin.site.urls),
-
     # User management
     # path('accounts/', include('django.contrib.auth.urls')), # built-in auth app
     path('accounts/', include('allauth.urls')),

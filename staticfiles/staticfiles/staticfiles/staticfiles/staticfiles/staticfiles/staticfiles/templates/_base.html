@@ -1,0 +1,19 @@
+{% load static %}
+<!DOCTYPE html>
+<html>
+    <head>
+        <title>{% block title %}Bookstore{% endblock title %}</title>
+        <!-- CSS -->
+        <link rel="stylesheet" href="{% static 'css/base.css' %}">
+    </head>
+    <body>
+        <div class="container">
+            <h2><a href="{% url 'home' %}">Home</a></h2>
+        </div>
+        {% block content %}
+        {% endblock content %}
+        {% block javascript %}
+            <script src="{% static 'js/base.js' %}"></script>
+        {% endblock javascript %}
+    </body>
+</html>

@@ -7,7 +7,7 @@
 {% block content %}
     <h1>Orders</h1>
     <div class="container">
-        <table class="table table-hover">
+        <table id="sortable-table" class="table table-dark table-hover">
             <thead>
                 <tr>
                     <th class="text-center" scope="col">#</th>
@@ -39,4 +39,41 @@
             </tbody>
         </table>
     </div>
+    <!-- JavaScript for sorting the table -->
+    <script>
+        document.addEventListener('DOMContentLoaded', function () {
+            const table = document.getElementById('sortable-table');
+            const headers = table.querySelectorAll('th');
+            const tbody = table.querySelector('tbody');
+            
+            // Function to sort table
+            const sortTable = (columnIndex, order) => {
+                const rows = Array.from(tbody.querySelectorAll('tr'));
+                rows.sort((a, b) => {
+                    const cellA = a.children[columnIndex].textContent.trim();
+                    const cellB = b.children[columnIndex].textContent.trim();
+                    
+                    if (!isNaN(cellA) && !isNaN(cellB)) {
+                        return order * (parseFloat(cellA) - parseFloat(cellB));
+                    }
+                    return order * cellA.localeCompare(cellB);
+                });
+        
+                rows.forEach(row => tbody.appendChild(row));
+            };
+            
+            // Attach click event to headers
+            headers.forEach((header, index) => {
+                header.addEventListener('click', () => {
+                    const currentOrder = header.dataset.order === 'desc' ? 1 : -1;
+                    sortTable(index, currentOrder);
+                    header.dataset.order = currentOrder === 1 ? 'asc' : 'desc';
+                });
+            });
+        
+            // Sort the first column by default (Descending order)
+            sortTable(0, -1);
+            headers[0].dataset.order = 'asc';
+        });
+    </script>
 {% endblock content %}

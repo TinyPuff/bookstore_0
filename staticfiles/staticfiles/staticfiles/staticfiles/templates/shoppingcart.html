@@ -1,0 +1,23 @@
+{% extends '_base.html' %}
+
+{% block title %}Shopping Cart{% endblock title %}
+
+{% block content %}
+    <h1>Shopping Cart</h1>
+    <div class="container">
+        <a href="#" class="badge badge-pill badge-warning">Check-Out</a>
+        {% for item in cartitems %}
+            <div class="card" style="width: 18rem;">
+                <div class="card-body">
+                <h5 class="card-title"><a href="{% url 'book_details' item.product.id %}" class="card-link">{{ item.quantity }} x {{ item.product.title }}</a></h5>
+                <h6 class="card-subtitle mb-2 text-muted">{{ item.product.author }}</h6>
+                <p class="card-text">Description</p> <!-- Show only the first 100 characters of the description -->
+                <form action="{% url 'editcart' item.id %}" method="post">{% csrf_token %}
+                    <input type="number" name="product_quantity" value="{{ item.quantity }}" min="0" max="{{ item.product.stock }}" />
+                    <button class="btn btn-primary" type="submit">Submit Changes</button>
+                </form>
+                </div>
+            </div>
+        {% endfor %}
+    </div>
+{% endblock content %}

@@ -1,0 +1,17 @@
+{% extends '_base.html' %}
+
+{% load static %}
+
+{% block content %}
+    <img class="bookcover" src="{% static 'images/cover.jpg' %}">
+    {% if user.is_authenticated %}
+        <p>Welcome {{ user.username }}</p>
+        <form action="{% url 'logout' %}" method="post">{% csrf_token %}
+            <button type="submit">Logout</button>
+        </form>
+    {% else %}
+        <a href="{% url 'login' %}">Log In</a>
+        <a href="{% url 'signup' %}">Sign Up</a>
+    {% endif %}
+    <p>Hey</p>
+{% endblock content %}

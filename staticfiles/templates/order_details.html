@@ -1,0 +1,33 @@
+{% extends '_base.html' %}
+
+{% block title %}Order Details{% endblock title %}
+
+{% load tag_library %}
+
+{% load humanize %}
+
+{% block content %}
+    <h1>Order Details</h1>
+    <div class="container">
+        <table class="table table-hover">
+            <thead>
+                <tr>
+                    <th scope="col" class="text-center">#</th>
+                    <th scope="col" class="text-center">Product</th>
+                    <th scope="col" class="text-center">Price</th>
+                    <th scope="col" class="text-center">Quantity</th>
+                </tr>
+            </thead>
+            <tbody>
+                {% for item in order %}
+                    <tr>
+                        <th scope="row" class="text-center">{{ forloop.counter }}</th>
+                        <td class="text-center"><a href="{{ item.product.get_absolute_url }}">{{ item.product }}</a></td>
+                        <td class="text-center">{{ item.product.price|to_int|intcomma }} IRR</td>
+                        <td class="text-center">{{ item.quantity }}</td>
+                    </tr>
+                {% endfor %}
+            </tbody>
+        </table>
+    </div>
+{% endblock content %}

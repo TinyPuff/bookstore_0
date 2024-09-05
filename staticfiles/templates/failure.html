@@ -1,0 +1,10 @@
+{% extends '_base.html' %}
+
+{% block title %}Failed Payment{% endblock title %}
+
+{% block content %}
+    <h1>Purchase Info</h1>
+    <p>Status: Failed</p>
+    <p>Tracking Code: {{ tracking_code }}</p>
+    <p>If any money has been withdrawn from your account, it will be back within 48 hours.</p>
+{% endblock content %}
