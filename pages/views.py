@@ -14,6 +14,7 @@ from django.contrib import messages
 from allauth.account.models import EmailAddress
 from django.http import HttpResponseRedirect, HttpResponse
 from .forms import SearchForm
+from django.contrib.auth.decorators import login_required
 
 # Create your views here.
 
@@ -25,13 +26,13 @@ class HomePageView(TemplateView):
 class AboutPageView(TemplateView):
     template_name = 'about.html'
 
-class BooksPageView(LoginRequiredMixin, ListView):
+class BooksPageView(ListView):
     model = Book
     template_name = 'books.html'
     context_object_name = 'books'
     login_url = 'account_login'
 
-class BookDetailsPageView(LoginRequiredMixin, DetailView):
+class BookDetailsPageView(DetailView):
     model = Book
     template_name = 'book_details.html'
     context_object_name = 'book'
@@ -100,6 +101,7 @@ class CartPageView(LoginRequiredMixin, ListView):
         return Cart.objects.filter(user=email)
     
 # make it so that only the signed-in users can view the shopping cart page
+@login_required
 def cart_view(request):
     email = EmailAddress.objects.get(user=request.user)
     cart_items = Cart.objects.filter(user=email)
@@ -112,7 +114,8 @@ def cart_view(request):
     for item in cart_items:
         total_price += item.product.price * item.quantity
     return render(request, template, {'cartitems': cart_items, 'total': total_price, 'last_item': last_item})
-    
+
+
 class AddToCartView(LoginRequiredMixin, View):
     login_url = 'account_login'
 
@@ -204,7 +207,8 @@ class EditCartView(LoginRequiredMixin, View):
             messages.error(request, "Invalid input.")
             return redirect('cart')
     
-    
+
+@login_required
 def edit_cart_view(request, product_id):
     if request.method == 'POST':
         cart_item = get_object_or_404(Cart, id=product_id)
@@ -238,6 +242,7 @@ def edit_cart_view(request, product_id):
             return redirect('cart')
 
 
+@login_required
 def orders_list_view(request):
     email = EmailAddress.objects.get(user=request.user)
     orders = OrderInfo.objects.filter(user=email)
@@ -248,6 +253,7 @@ def orders_list_view(request):
     return render(request, template, context)
 
 
+@login_required
 def order_details_view(request, id):
     if request.method == 'GET':
         tracking_code = request.GET.get('tracking_code')
@@ -256,6 +262,12 @@ def order_details_view(request, id):
     context = {'order': order}
     template = 'order_details.html'
     return render(request, template, context)
+
+
+@login_required
+def management_view(request):
+    template = "management.html"
+    return render(request, template)
 
 # To-Do: Let the users change the quantity from the cart and also the book_details page.
 # Add a Check-Out button to the cart and fix the callback

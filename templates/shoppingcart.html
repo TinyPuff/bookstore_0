@@ -7,7 +7,7 @@
 
 {% block content %}
     <div class="row g-0">
-        <p class="display-6"><b>Shopping Cart</b></p>
+        <h3 class="display-6"><b>Shopping Cart</b></h3>
         {% if cartitems|length > 0 %}
             <div class="mb-5 mt-4 align-baseline" style="max-width: 960px;">
                 <!-- to add nav-tabs, add card to the class attribute of the div above ^
@@ -51,7 +51,7 @@
                     {% endfor %}
                 </div>
             </div>
-            <div class="card border border-2 border-secondary rounded position-fixed ms-3 mt-4 align-top" style="height: 150px; width: 18rem; right:120px; top: 121px;">
+            <div class="card border border-2 border-secondary rounded ms-3 mt-4 align-top" style="height: 150px; width: 18rem;">
                 <div class="card-body text-center">
                     <h5 class="cart-title">Finalize Order</h5>
                     <p class="card-text">Total Price: <span class="badge text-dark bg-warning text-center round">{{ total|to_int|intcomma }} IRR</span></p>
