@@ -36,4 +36,7 @@ urlpatterns = [
     # path('orders/', include('orders.urls')),
     # path('accounts/', include('users.urls')), # only needed when using django's built-in auth app
     
-] + static(settings.MEDIA_URL, document_root=settings.MEDIA_ROOT)
+]
+
+if settings.DEBUG == True or settings.DEBUG == False:
+    urlpatterns += static(settings.MEDIA_URL, document_root=settings.MEDIA_ROOT)

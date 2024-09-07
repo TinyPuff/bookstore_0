@@ -7,7 +7,7 @@ from django.db.models.query import QuerySet
 from django.shortcuts import render, get_object_or_404, redirect
 from django.views.generic import TemplateView, ListView, DetailView, View
 from django.contrib.auth import get_user_model
-from books.models import Book
+from books.models import Book, Category, BookCategory
 from django.db.models import Q
 from orders.models import Cart, OrderInfo, OrderedProductsInfo
 from django.contrib import messages
@@ -15,6 +15,7 @@ from allauth.account.models import EmailAddress
 from django.http import HttpResponseRedirect, HttpResponse
 from .forms import SearchForm
 from django.contrib.auth.decorators import login_required
+from django.views.decorators.csrf import csrf_exempt
 
 # Create your views here.
 
@@ -28,9 +29,17 @@ class AboutPageView(TemplateView):
 
 class BooksPageView(ListView):
     model = Book
-    template_name = 'books.html'
+    template_name = 'books2.html'
     context_object_name = 'books'
     login_url = 'account_login'
+
+    def get_context_data(self, **kwargs):
+        context = super().get_context_data(**kwargs)
+        context['books'] = Book.objects.all()
+        # print(str(Book.objects.get(title='Django for Professionals').category.all()[0].books.all()))
+        context['categories'] = Category.objects.all()
+        return context
+        
 
 class BookDetailsPageView(DetailView):
     model = Book
@@ -61,6 +70,7 @@ class SearchResultsPageView(ListView):
             Q(title__icontains=query) | Q(author__icontains=query)
         )
 
+@csrf_exempt
 def search_results_view(request):
     template = 'search_results.html'
     context = {}
@@ -72,16 +82,16 @@ def search_results_view(request):
             query = Q()
             form['title'] = request.GET.get('title')
             form['author'] = request.GET.get('author')
-            form['category'] = request.GET.get('category')
+            form['primary_category'] = request.GET.get('primary_category')
             for key, value in form.items():
                 if value:
                     if key == 'title':
                         query &= Q(title__icontains=value)
                     elif key == 'author':
                         query &= Q(author__icontains=value)
-                    elif key == 'category':
-                        query &= Q(category__exact=value)
-            results = Book.objects.filter(query)
+                    elif key == 'primary_category':
+                        query &= Q(primary_category__exact=value) | Q(secondary_category__exact=value)
+            results = list(set(Book.objects.filter(query)))
         except:
             query = request.GET.get('q')
             results = Book.objects.filter(

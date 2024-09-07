@@ -1,0 +1,41 @@
+{% extends '_base.html' %}
+
+{% load tag_library %}
+
+{% load humanize %}
+
+{% block title %}Books{% endblock title %}
+
+{% block content %}
+    <h3>Books</h3>
+    <div class="row">
+        <div class="row row-cols-1 row-cols-md-3">
+            {% for book in books %}
+                <div class="col">
+                    <div class="card mb-3 me-2 rounded border border-secondary" style="max-width: 400px;">
+                        <div class="row g-0">
+                            <div class="col-md-4 my-2 mx-2">
+                                <img src="{% if book.cover %} {{ book.cover.url }} {% else %}{% endif %}" class="d-flex" alt="{{ book.title }}" style="height: 150px; width: 120px; align-items: center; vertical-align: middle;">
+                            </div>
+                            <div class="col-md-8 mt-2" style="width: 220px;">
+                                <h5 class="card-title" style="font-size: 15px;"><a class="card-link link-warning" href="{% url 'book_details' book.id %}">{{ book.title }}</a></h5>
+                                <h6 class="card-subtitle text-muted" style="font-size: 14px;">{{ book.author }}</h6>
+                                <p style="font-size: 13px;"><code>{{ book.price|to_int|intcomma }} IRR</code></p>
+                                <hr class="mt-5">
+                                
+                                <div class="row row-col-1">
+                                    {% for category in book.primary_category.all %}
+                                        <div class="col me-1">
+                                            <a class="card-link link-warning" style="font-size: 13px;"> #{{ category.title }} </a>
+                                        </div>
+                                    {% endfor %}
+                                </div>
+                            </div>
+                        </div>
+                    </div>
+                </div>
+            {% endfor %}
+        </div>
+    </div>
+{% endblock content %}
+    

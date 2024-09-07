@@ -1,5 +1,6 @@
 from django.contrib import admin
 from .models import Category, Book, Review, BookCategory
+from .forms import BookForm
 
 # Register your models here.
 
@@ -9,6 +10,7 @@ class ReviewInline(admin.TabularInline):
 
 
 class BookAdmin(admin.ModelAdmin):
+    form = BookForm
     inlines = [
         ReviewInline,
     ]

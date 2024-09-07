@@ -27,7 +27,8 @@ class Book(models.Model):
     price = models.DecimalField(max_digits=11, decimal_places=2)
     details = models.TextField(max_length=1000, default="")
     stock = models.PositiveIntegerField(default=0)
-    category = models.ManyToManyField(Category)
+    primary_category = models.ManyToManyField(Category, related_name='books')
+    secondary_category = models.ManyToManyField(Category, related_name='sbooks', blank=True)
 
     class Meta:
         indexes = [

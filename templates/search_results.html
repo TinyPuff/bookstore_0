@@ -9,7 +9,7 @@
 {% block content %}
     <h1>Search Results</h1>
     <div class="container">
-        <form action="{% url 'search_results' %}" method="get">{% csrf_token %}
+        <form action="{% url 'search_results' %}" method="get">
             <div>
                 <label>{{ search_form.title.label_tag }}</label>
                 <input type="text" name="{{ search_form.title.name }}" id="{{ search_form.title.id_for_label }}" placeholder="Title" />
@@ -20,9 +20,9 @@
             </div>
             <div>
                 <label>Category:</label>
-                <select name="{{ search_form.category.name }}" id="{{ search_form.category.id_for_label }}">
+                <select name="{{ search_form.primary_category.name }}" id="{{ search_form.primary_category.id_for_label }}">
                     <option></option>
-                    {% for option in search_form.category %}
+                    {% for option in search_form.primary_category %}
                         {% if option != '' %}
                             {{ option }}
                         {% endif %}
@@ -34,7 +34,7 @@
     </div>
     <div class="list-group">
         {% for result in results %}
-            <a href="{{ book.get_absolute_url }}" class="list-group-item list-group-item-action list-group-item-info"><i>{{ result.title }}</i> by <b>{{ result.author }}</b> | <small class="list-text text-muted">{{ result.price|to_int|intcomma }} IRR</small></a>
+            <a href="{{ result.get_absolute_url }}" class="list-group-item list-group-item-action list-group-item-info"><i>{{ result.title }}</i> by <b>{{ result.author }}</b> | <small class="list-text text-muted">{{ result.price|to_int|intcomma }} IRR</small></a>
         {% endfor %}
     </div>
 {% endblock content %}

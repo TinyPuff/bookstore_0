@@ -10,3 +10,7 @@ def to_int(value):
 def reduce_one(value):
     value -= 1
     return value
+
+@register.filter()
+def conv_list(arg):
+    return list(arg)
