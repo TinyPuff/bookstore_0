@@ -5,3 +5,5 @@ Bookstore.code-workspace
 orders/views_backup.py
 templates/shoppingcart2.html
 todo.txt
+Pipfile
+Pipfile.lock
