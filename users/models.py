@@ -12,6 +12,6 @@ class CustomUser(AbstractUser):
 class Profile(models.Model):
     # make it so that the user can change their email later on
     user = models.OneToOneField(EmailAddress, on_delete=models.CASCADE)
-    age = models.PositiveIntegerField(max_length=3, blank=True, null=True)
+    age = models.PositiveIntegerField(blank=True, null=True)
     address = models.TextField(max_length=500, blank=True, null=True)
     zipcode = models.PositiveIntegerField(blank=True, null=True)
