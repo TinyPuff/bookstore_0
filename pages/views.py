@@ -1,18 +1,15 @@
-from typing import Any
 from django.contrib.auth.mixins import (
     LoginRequiredMixin,
-    PermissionRequiredMixin,
 )
-from django.db.models.query import QuerySet
 from django.shortcuts import render, get_object_or_404, redirect
 from django.views.generic import TemplateView, ListView, DetailView, View
 from django.contrib.auth import get_user_model
-from books.models import Book, Category, BookCategory
+from books.models import Book, Category
 from django.db.models import Q
 from orders.models import Cart, OrderInfo, OrderedProductsInfo
 from django.contrib import messages
 from allauth.account.models import EmailAddress
-from django.http import HttpResponseRedirect, HttpResponse
+from django.http import HttpResponseRedirect
 from .forms import SearchForm
 from django.contrib.auth.decorators import login_required
 from django.views.decorators.csrf import csrf_exempt
