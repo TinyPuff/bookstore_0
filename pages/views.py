@@ -325,10 +325,17 @@ def order_details_view(request, id):
 
 @login_required
 def profile_view(request):
+    email = EmailAddress.objects.get(user=request.user)
+    profile, created = Profile.objects.get_or_create(user=email)
+    template = "profile.html"
+    context = {
+        "profile_form": ProfileForm(),
+        "profile": profile,
+    }
     if request.method == "POST":
-        context = {
-            "profile_form": ProfileForm(),
-            "profile": Profile.objects.get(user=request.user.email),
-        }
-        template = "profile.html"
-        return render(request, template, context)
+        profile.age = request.POST.get("age")
+        profile.address = request.POST.get("address")
+        profile.zipcode = request.POST.get("zipcode")
+        profile.save()
+        return redirect("profile")
+    return render(request, template, context)

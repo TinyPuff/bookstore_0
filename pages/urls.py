@@ -39,4 +39,5 @@ urlpatterns = [
     path("failure/", failed_payment, name="failure"),
     path("orders/", orders_list_view, name="orders"),
     path("order_details/<int:id>/", order_details_view, name="order_details"),
+    path("profile/", profile_view, name="profile"),
 ]
