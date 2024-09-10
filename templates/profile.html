@@ -1,0 +1,28 @@
+{% extends '_base.html' %}
+
+{% block title %}Profile{% endblock %}
+
+{% block content %}
+    <h3>User Profile</h3>
+    <div class="container">
+        <form action="{% url 'profile' %}" method="post">
+            <div>
+                <label>{{ profile_form.user.label_tag }}</label>
+                <p>{{ profile_form.user }}</p>
+            </div>
+            <div>
+                <label>{{ profile_form.age.label_tag }}</label>
+                <input type="text" name="{{ profile_form.age.name }}" id="{{ profile_form.age.id_for_label }}" placeholder="Age" />
+            </div>
+            <div>
+                <label>{{ profile_form.address.label_tag }}</label>
+                <input type="text" name="{{ profile_form.address.name }}" id="{{ profile_form.address.id_for_label }}" placeholder="Address" />
+            </div>
+            <div></div>
+                <label>{{ profile_form.zipcode.label_tag }}</label>
+                <input type="text" name="{{ profile_form.zipcode.name }}" id="{{ profile_form.zipcode.id_for_label }}" placeholder="Zipcode" />
+            </div>
+            <button type="submit" class="btn btn-warning">Submit</button>
+        </form>
+    </div>
+{% endblock content %}

@@ -13,6 +13,8 @@ from django.http import HttpResponseRedirect
 from .forms import SearchForm
 from django.contrib.auth.decorators import login_required
 from django.views.decorators.csrf import csrf_exempt
+from users.forms import ProfileForm
+from users.models import Profile
 
 # Create your views here.
 
@@ -322,15 +324,11 @@ def order_details_view(request, id):
 
 
 @login_required
-def management_view(request):
-    template = "management.html"
-    return render(request, template)
-
-
-# To-Do: Let the users change the quantity from the cart and also the book_details page.
-# Add a Check-Out button to the cart and fix the callback
-# Use Wagtail CMS for content management.
-# Use Tailwind CSS for the templates.
-# Learn pagination for this, the books list and the search results.
-# Add a category view.
-# Try to imitate Exo.ir's looks.
+def profile_view(request):
+    if request.method == "POST":
+        context = {
+            "profile_form": ProfileForm(),
+            "profile": Profile.objects.get(user=request.user.email),
+        }
+        template = "profile.html"
+        return render(request, template, context)
