@@ -26,7 +26,7 @@ class ProfileForm(forms.ModelForm):
     class Meta:
         model = Profile
         fields = (
-            "email",
+            "user",
             "age",
             "address",
             "zipcode",
