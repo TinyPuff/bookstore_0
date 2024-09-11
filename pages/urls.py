@@ -15,6 +15,7 @@ from .views import (
     order_details_view,
     edit_cart_view,
     profile_view,
+    edit_profile_view,
 )
 from orders.views import successful_payment, failed_payment
 
@@ -40,4 +41,5 @@ urlpatterns = [
     path("orders/", orders_list_view, name="orders"),
     path("order_details/<int:id>/", order_details_view, name="order_details"),
     path("profile/", profile_view, name="profile"),
+    path("profile/edit/", edit_profile_view, name="edit_profile"),
 ]

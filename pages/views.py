@@ -38,7 +38,6 @@ class BooksPageView(ListView):
     def get_context_data(self, **kwargs):
         context = super().get_context_data(**kwargs)
         context["books"] = Book.objects.all()
-        # print(str(Book.objects.get(title='Django for Professionals').category.all()[0].books.all()))
         context["categories"] = Category.objects.all()
         return context
 
@@ -118,7 +117,6 @@ class CartPageView(LoginRequiredMixin, ListView):
         return Cart.objects.filter(user=email)
 
 
-# make it so that only the signed-in users can view the shopping cart page
 @login_required
 def cart_view(request):
     email = EmailAddress.objects.get(user=request.user)
@@ -144,10 +142,6 @@ class AddToCartView(LoginRequiredMixin, View):
     def post(self, request, product_id):
         product = get_object_or_404(Book, id=product_id)
         email = EmailAddress.objects.get(user=self.request.user)
-        # expected_quantity = int(request.session.get('selected_product_stock'))
-
-        # I think this part is completely unnecessary (the whole session thing)...
-        # if expected_quantity == product_quantity:
         # check if that product is in stock
         try:
             # Get the product quantity from the form POST data
@@ -303,9 +297,7 @@ def edit_cart_view(request, product_id):
 def orders_list_view(request):
     email = EmailAddress.objects.get(user=request.user)
     orders = OrderInfo.objects.filter(user=email)
-    # description
     context = {"orders": orders}
-    # request.session['orders']
     template = "orders.html"
     return render(request, template, context)
 
@@ -328,6 +320,17 @@ def profile_view(request):
     email = EmailAddress.objects.get(user=request.user)
     profile, created = Profile.objects.get_or_create(user=email)
     template = "profile.html"
+    context = {
+        "profile": profile,
+    }
+    return render(request, template, context)
+
+
+@login_required
+def edit_profile_view(request):
+    email = EmailAddress.objects.get(user=request.user)
+    profile, created = Profile.objects.get_or_create(user=email)
+    template = "edit_profile.html"
     context = {
         "profile_form": ProfileForm(),
         "profile": profile,

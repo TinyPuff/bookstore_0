@@ -1,0 +1,38 @@
+{% extends '_base.html' %}
+
+{% load crispy_forms_tags %}
+
+{% block title %}Profile{% endblock %}
+
+{% block content %}
+    <h3>User Profile</h3>
+    <div class="d-flex">
+        <div class="col mb-3">
+            <div class="card border border-secondary mx-auto" style="max-width: 512px;">
+                <ul class="nav nav-tabs border-bottom border-secondary">
+                    <li class="nav-item">
+                        <a class="nav-link" href="{% url 'profile' %}">{{ user.username }}</a>
+                    </li>
+                    <li class="nav-item">
+                        <a class="nav-link active" aria-current="page" href="#">Edit Profile</a>
+                    </li>
+                </ul>
+                <div class="card-body">
+                    <form action="{% url 'edit_profile' %}" method="post">{% csrf_token %}
+                        <div class="card-title">
+                            <h5>{{ profile.user }}</h5>
+                        </div>
+                        <label>{{ profile_form.age.label_tag }}</label>
+                        <input type="number" class="number-input form-control" name="{{ profile_form.age.name }}" id="{{ profile_form.age.id_for_label }}" value="{{ profile.age }}" placeholder="Age" />
+                        <label>{{ profile_form.address.label_tag }}</label>
+                        <textarea class="textarea form-control" name="{{ profile_form.address.name }}" id="{{ profile_form.address.id_for_label }}" 
+                        placeholder="Address">{{ profile.address }}</textarea>
+                        <label>{{ profile_form.zipcode.label_tag }}</label>
+                        <input type="number" class="number-input form-control" name="{{ profile_form.zipcode.name }}" id="{{ profile_form.zipcode.id_for_label }}" value="{{ profile.zipcode }}" placeholder="Zipcode" />
+                        <button type="submit" class="btn btn-warning">Submit</button>
+                    </form>
+                </div>
+            </div>
+        </div>
+    </div>
+{% endblock content %}

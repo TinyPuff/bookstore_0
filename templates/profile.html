@@ -9,14 +9,24 @@
     <div class="d-flex">
         <div class="col mb-3">
             <div class="card border border-secondary mx-auto" style="max-width: 512px;">
+                <ul class="nav nav-tabs border-bottom border-secondary">
+                    <li class="nav-item">
+                        <a class="nav-link active" aria-current="page" href="#">{{ user.username }}</a>
+                    </li>
+                    <li class="nav-item">
+                        <a class="nav-link" href="{% url 'edit_profile' %}">Edit Profile</a>
+                    </li>
+                </ul>
                 <div class="card-body">
-                    <form action="{% url 'profile' %}" method="post">{% csrf_token %}
-                        <div class="card-title">
-                            <h5>{{ profile.user }}</h5>
-                        </div>
-                        {{ profile_form|crispy }}
-                        <button type="submit" class="btn btn-warning">Submit</button>
-                    </form>
+                    <div class="card-title">
+                        <h5>{{ profile.user }}</h5>
+                    </div>
+                    <label>Age:</label>
+                    <p>{{ profile.age }}</p>
+                    <label>Address:</label>
+                    <address>{{ profile.address }}</address>
+                    <label>Zipcode:</label>
+                    <code>{{ profile.zipcode }}</code>
                 </div>
             </div>
         </div>
