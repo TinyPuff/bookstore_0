@@ -3,6 +3,7 @@
 An online bookstore written in Django with a custom user authentication model, shopping cart and more.
 
 ## Features
+
 - **User Authentication**
   - Signup, login, and logout functionality.
   - Password reset via email.
@@ -82,7 +83,7 @@ An online bookstore written in Django with a custom user authentication model, s
 
    ```bash
    python -m venv .env
-   source ./.env/bin/activate
+   .venv\Scripts\Activate
    pip install -r requirements.txt
    ```
 
