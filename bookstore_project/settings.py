@@ -195,11 +195,13 @@ CRISPY_TEMPLATE_PACK = "bootstrap5"
 # E-mail config
 ANYMAIL = {
     # (exact settings here depend on your ESP...)
-    "MAILERSEND_API_TOKEN": "mlsn.33b6565b982ccce892500cfcdf270f5a74e5986f166ddddf66d6519e1e584df7",
-    "MAILERSEND_SENDER_DOMAIN": "trial-pr9084zzerm4w63d.mlsender.net",  # your MailerSend domain, if needed
+    "MAILERSEND_API_TOKEN": str(os.environ.get("MAILERSEND_API_TOKEN")),
+    "MAILERSEND_SENDER_DOMAIN": str(
+        os.environ.get("MAILERSEND_SENDER_DOMAIN")
+    ),  # your MailerSend domain, if needed
 }
 EMAIL_BACKEND = "anymail.backends.mailersend.EmailBackend"
-DEFAULT_FROM_EMAIL = "admin@trial-pr9084zzerm4w63d.mlsender.net"  # if you don't already have this in settings
+DEFAULT_FROM_EMAIL = str(os.environ.get("DEFAULT_FROM_EMAIL"))  # if you don't already have this in settings
 SERVER_EMAIL = "your-server@example.com"  # ditto (default from-email for Django errors)
 
 # azbankgateways config
