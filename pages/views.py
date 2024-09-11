@@ -22,16 +22,16 @@ User = get_user_model()
 
 
 class HomePageView(TemplateView):
-    template_name = "home.html"
+    template_name = "pages/home.html"
 
 
 class AboutPageView(TemplateView):
-    template_name = "about.html"
+    template_name = "pages/about.html"
 
 
 class BooksPageView(ListView):
     model = Book
-    template_name = "books2.html"
+    template_name = "pages/books.html"
     context_object_name = "books"
     login_url = "account_login"
 
@@ -44,7 +44,7 @@ class BooksPageView(ListView):
 
 class BookDetailsPageView(DetailView):
     model = Book
-    template_name = "book_details.html"
+    template_name = "pages/book_details.html"
     context_object_name = "book"
     login_url = "account_login"
 
@@ -63,7 +63,7 @@ class BookDetailsPageView(DetailView):
 
 class SearchResultsPageView(ListView):
     model = Book
-    template_name = "search_results.html"
+    template_name = "pages/search_results.html"
     context_object_name = "books"
 
     def get_queryset(self):
@@ -75,7 +75,7 @@ class SearchResultsPageView(ListView):
 
 @csrf_exempt
 def search_results_view(request):
-    template = "search_results.html"
+    template = "pages/search_results.html"
     context = {}
     context["search_form"] = SearchForm()
     if request.method == "GET":
@@ -108,7 +108,7 @@ def search_results_view(request):
 
 class CartPageView(LoginRequiredMixin, ListView):
     model = Cart
-    template_name = "shoppingcart.html"
+    template_name = "pages/shoppingcart.html"
     context_object_name = "cartitems"
     login_url = "account_login"
 
@@ -125,7 +125,7 @@ def cart_view(request):
         last_item = cart_items[::-1][0]
     except:
         last_item = ""
-    template = "shoppingcart.html"
+    template = "pages/shoppingcart.html"
     total_price = 0
     for item in cart_items:
         total_price += item.product.price * item.quantity
@@ -298,7 +298,7 @@ def orders_list_view(request):
     email = EmailAddress.objects.get(user=request.user)
     orders = OrderInfo.objects.filter(user=email)
     context = {"orders": orders}
-    template = "orders.html"
+    template = "pages/orders.html"
     return render(request, template, context)
 
 
@@ -311,7 +311,7 @@ def order_details_view(request, id):
         order=OrderInfo.objects.get(tracking_code=tracking_code)
     )
     context = {"order": order}
-    template = "order_details.html"
+    template = "pages/order_details.html"
     return render(request, template, context)
 
 
@@ -319,7 +319,7 @@ def order_details_view(request, id):
 def profile_view(request):
     email = EmailAddress.objects.get(user=request.user)
     profile, created = Profile.objects.get_or_create(user=email)
-    template = "profile.html"
+    template = "pages/profile.html"
     context = {
         "profile": profile,
     }
@@ -330,7 +330,7 @@ def profile_view(request):
 def edit_profile_view(request):
     email = EmailAddress.objects.get(user=request.user)
     profile, created = Profile.objects.get_or_create(user=email)
-    template = "edit_profile.html"
+    template = "pages/edit_profile.html"
     context = {
         "profile_form": ProfileForm(),
         "profile": profile,
