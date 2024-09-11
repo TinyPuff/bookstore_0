@@ -2,7 +2,7 @@ anyascii==0.3.2
 asgiref==3.8.1
 async-timeout==4.0.3
 attrs==24.2.0
-az-iranian-bank-gateways==2.0.8
+az-iranian-bank-gateways==2.0.9
 beautifulsoup4==4.12.3
 certifi==2024.8.30
 charset-normalizer==3.3.2
@@ -33,11 +33,11 @@ openpyxl==3.1.5
 packaging==24.1
 pillow==10.4.0
 pillow_heif==0.18.0
-platformdirs==4.2.2
+platformdirs==4.3.2
 psycopg2-binary==2.9.9
 pycryptodome==3.20.0
 python-dotenv==1.0.1
-pytz==2024.1
+pytz==2024.2
 redis==5.0.8
 requests==2.32.3
 requests-file==2.1.0
