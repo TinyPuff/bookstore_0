@@ -14,7 +14,7 @@ An online bookstore written in Django with a custom user authentication model, s
   - All past orders are stored in the Orders page. (Includes the tracking code, date, ordered products, etc.)
 - **Advanced Search Form**
   - Search for any book in the database by entering keywords into the search form.
-  - More specific searches can be done by specifying the author, category, etc.
+  - More specific searches can be done by specifying the author, category, etc. (uses querysets and Q objects to find the books)
 - **Admin Panel**
   - Manage books, categories, orders and profiles.
   - Custom admin model configuration.
