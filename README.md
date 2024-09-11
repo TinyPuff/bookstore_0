@@ -82,7 +82,7 @@ An online bookstore written in Django with a custom user authentication model, s
 2. Install dependencies:
 
    ```bash
-   python -m venv .env
+   python -m venv .venv
    .venv\Scripts\Activate
    pip install -r requirements.txt
    ```
